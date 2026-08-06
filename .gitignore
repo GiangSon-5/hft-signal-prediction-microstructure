@@ -1,0 +1,102 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# pytest / coverage / linting
+.cache
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.gemini/
+.agents/
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Data Files & Artifacts (Ignore raw & processed data except .gitkeep)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+*.parquet
+*.feather
+*.h5
+*.hd5
+
+# Large Dataset Files
+ds_assessment_data.csv
+
+# Saved Models & Heavy Binary Cache
+*.pkl
+*.joblib
+*.onnx
+*.bin
+*.model
+
+# Output Reports & Logs
+*.log
+reports/technical_report.html
+reports/technical_report.pdf
+!reports/figures/.gitkeep
+
+# Markdown Documentation (Ignore all .md files except README)
+*.md
+**/*.md
+!README*.md
+!**/README*.md
+!README.md
+!**/README.md
+
