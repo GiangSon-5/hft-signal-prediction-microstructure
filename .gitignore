@@ -92,11 +92,9 @@ reports/technical_report.html
 reports/technical_report.pdf
 !reports/figures/.gitkeep
 
-# Markdown Documentation (Ignore all .md files except README)
+# Markdown Documentation (Ignore all .md files except README.md)
 *.md
 **/*.md
-!README*.md
-!**/README*.md
+README_MASTER.md
 !README.md
-!**/README.md
 
