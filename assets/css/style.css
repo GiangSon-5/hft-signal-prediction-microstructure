@@ -1,0 +1,111 @@
+/* ==========================================================================
+   HFT Market Data Analytics - Custom CSS System
+   ========================================================================== */
+
+/* Font & Color Design Tokens */
+:root {
+    --bg-dark: #090d16;
+    --bg-card: rgba(30, 41, 59, 0.5);
+    --bg-panel: rgba(30, 41, 59, 0.7);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.18);
+    
+    --color-task1: #10b981;
+    --color-task1-bg: rgba(16, 185, 129, 0.08);
+    --color-task1-border: rgba(16, 185, 129, 0.25);
+
+    --color-task2: #818cf8;
+    --color-task2-bg: rgba(129, 140, 248, 0.08);
+    --color-task2-border: rgba(129, 140, 248, 0.25);
+
+    --color-task3: #fbbf24;
+    --color-task3-bg: rgba(251, 191, 36, 0.08);
+    --color-task3-border: rgba(251, 191, 36, 0.25);
+}
+
+/* Base Setup */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-dark);
+    color: #f8fafc;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism System */
+.glass-panel {
+    background: var(--bg-panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+}
+
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glass);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+    box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* Gradient Typography */
+.gradient-text-task1 {
+    background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-task2 {
+    background: linear-gradient(135deg, #a78bfa 0%, #6366f1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-task3 {
+    background: linear-gradient(135deg, #fcd34d 0%, #d97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.4);
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.7);
+}
+
+/* Checklist Item Styles */
+.checklist-item {
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.checklist-item:hover {
+    background-color: rgba(51, 65, 85, 0.4);
+}
+
+/* Animations */
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
+
+.glow-animation {
+    animation: pulseGlow 4s infinite ease-in-out;
+}

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HFT Market Data Analytics — Project Dashboard</title>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS System -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand / Project Name -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <i class="fa-solid fa-chart-line text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">HFT Market Data Analytics</h1>
+                            <span class="px-2 py-0.5 text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-full">H2 2024</span>
+                        </div>
+                        <p class="text-xs text-slate-400 font-mono hidden sm:block">Quantitative Data Science Architecture (~260,000 nến 1 phút)</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex items-center space-x-1 sm:space-x-2">
+                    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all text-white bg-indigo-600/30 border border-indigo-500/40 shadow-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-cubes"></i>
+                        <span>Roadmap & Sub-tasks</span>
+                    </button>
+                    <button onclick="switchTab('overview')" id="tab-overview" class="nav-tab px-3 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Tổng Quan & Data</span>
+                    </button>
+                    <button onclick="switchTab('criteria')" id="tab-criteria" class="nav-tab px-3 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                        <span>Tiêu Chí & Output</span>
+                    </button>
+                    <button onclick="switchTab('results')" id="tab-results" class="nav-tab px-3 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all flex items-center space-x-2 relative">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Kết Quả & Báo Cáo</span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- Global Progress Header Summary -->
+        <section class="glass-panel rounded-2xl p-5 sm:p-6 relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-12 -bottom-12 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <!-- Left Details -->
+                <div class="lg:col-span-7 space-y-3">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-md">
+                            <i class="fa-solid fa-circle-check mr-1.5 text-xs"></i>Dữ Liệu Đã Nối Kết
+                        </span>
+                        <span class="text-xs text-slate-400 font-mono">Dataset: ds_assessment_data.csv (~25 MB)</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white">
+                        Hệ Thống Phân Tích & Mô Hình Hoá Chuỗi Thời Gian Tần Suất Cao
+                    </h2>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        Phân tích chuyên sâu 260,000 nến chuỗi thời gian 1 phút (H2 2024), xây dựng mô hình dự báo bùng nổ biến động giá (Volatility Spikes), kiểm định Time-Series CV không lookahead leakage và phân tích cấu trúc thị trường (Order Flow Toxicity & Kyle's Lambda).
+                    </p>
+                </div>
+
+                <!-- Right Progress Widget -->
+                <div class="lg:col-span-5 glass-card rounded-xl p-4 space-y-3 border border-slate-700/60">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Tiến Độ Tổng Thể Toàn Bộ Task</span>
+                        <span id="global-percent" class="text-lg font-extrabold font-mono text-indigo-400">0%</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                        <div id="global-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 via-indigo-500 to-amber-500 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+
+                    <!-- Mini Counts -->
+                    <div class="grid grid-cols-3 gap-2 pt-1 text-center font-mono text-xs">
+                        <div class="bg-slate-900/60 rounded-lg p-2 border border-slate-800">
+                            <span class="block text-slate-400 text-[10px]">TỔNG SUB-TASKS</span>
+                            <span id="total-subtasks-count" class="font-bold text-white text-sm">13</span>
+                        </div>
+                        <div class="bg-slate-900/60 rounded-lg p-2 border border-slate-800">
+                            <span class="block text-slate-400 text-[10px]">ĐÃ HOÀN THÀNH</span>
+                            <span id="completed-subtasks-count" class="font-bold text-emerald-400 text-sm">0</span>
+                        </div>
+                        <div class="bg-slate-900/60 rounded-lg p-2 border border-slate-800">
+                            <span class="block text-slate-400 text-[10px]">CÒN LẠI</span>
+                            <span id="remaining-subtasks-count" class="font-bold text-amber-400 text-sm">13</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 1: ROADMAP & SUB-TASKS DASHBOARD -->
+        <div id="tab-content-dashboard" class="tab-pane space-y-6">
+
+            <!-- Filter Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-4 glass-panel p-4 rounded-xl">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs font-semibold uppercase text-slate-400 mr-2"><i class="fa-solid fa-filter mr-1"></i> Lọc Task:</span>
+                    <button onclick="filterTasks('all')" class="task-filter-btn active px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 text-white border border-slate-700 transition">Tất cả (3 Tasks)</button>
+                    <button onclick="filterTasks('task1')" class="task-filter-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-slate-800 transition">Task 1: Signal</button>
+                    <button onclick="filterTasks('task2')" class="task-filter-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition">Task 2: Modeling</button>
+                    <button onclick="filterTasks('task3')" class="task-filter-btn px-3 py-1.5 text-xs font-medium rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition">Task 3: Deep Dive</button>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <button onclick="resetAllChecklists()" class="px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition border border-transparent hover:border-rose-500/30">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Reset Đánh Dấu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task Cards Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- TASK 1 CARD -->
+                <div class="task-card glass-card rounded-2xl p-5 border-t-4 border-t-emerald-500 flex flex-col justify-between" data-task="task1">
+                    <div class="space-y-4">
+                        <!-- Card Header -->
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
+                                    TASK 1 — BẮT BUỘC
+                                </span>
+                                <h3 class="text-lg font-bold text-white group-hover:text-emerald-400 transition">Đặc Trưng Hóa Tín Hiệu</h3>
+                                <p class="text-xs text-slate-400 font-mono mt-0.5">Signal Characterization & Data Quality</p>
+                            </div>
+                            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                                <i class="fa-solid fa-wave-square"></i>
+                            </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs">
+                            <span class="text-slate-400">Trạng Thái:</span>
+                            <select onchange="updateTaskStatus('task1', this.value)" id="status-task1" class="bg-slate-800 text-emerald-400 font-semibold rounded-md px-2 py-1 border border-slate-700 focus:outline-none text-xs">
+                                <option value="not_started">⚪ Chưa Bắt Đầu</option>
+                                <option value="in_progress" selected>🟡 Đang Xử Lý EDA</option>
+                                <option value="completed">🟢 Đã Hoàn Thành</option>
+                            </select>
+                        </div>
+
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Phân tích thống kê phân phối returns 1 phút (close-to-close), đo lường kurtosis, xác định 2 chế độ biến động (rolling volatility 60m), quan hệ volume-trades-price range và xử lý data quality.
+                        </p>
+
+                        <!-- Checklist -->
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Checklist Các Bước Cần Làm:</div>
+                            
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-1-1" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">1.1 Phân phối Returns (Kurtosis, Fat-tail, JB-test, Fit Student-t)</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-1-2" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">1.2 Volatility Regimes (Trực quan 2 chế độ biến động trượt 60m)</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-1-3" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">1.3 Tương quan Volume, Trades & Biên độ biến động giá</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-1-4" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">1.4 Data Quality Audit (Xử lý Gaps, Outliers, Forward Fill)</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition bg-emerald-500/5 border border-emerald-500/10">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-1-5" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-emerald-300 leading-snug font-medium"><i class="fa-solid fa-star text-[10px] mr-1 text-emerald-400"></i>[Bonus] Kiểm định Tự tương quan ACF/PACF</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Footer Output -->
+                    <div class="mt-5 pt-3 border-t border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span>Đầu ra dự kiến:</span>
+                            <span class="font-mono text-emerald-400 font-semibold">Notebook 01 + Clean Parquet</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="bar-task1" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TASK 2 CARD -->
+                <div class="task-card glass-card rounded-2xl p-5 border-t-4 border-t-indigo-500 flex flex-col justify-between" data-task="task2">
+                    <div class="space-y-4">
+                        <!-- Card Header -->
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2">
+                                    TASK 2 — BẮT BUỘC
+                                </span>
+                                <h3 class="text-lg font-bold text-white">Mô Hình Dự Đoán</h3>
+                                <p class="text-xs text-slate-400 font-mono mt-0.5">Predictive Modeling & Time-Aware CV</p>
+                            </div>
+                            <div class="w-9 h-9 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs">
+                            <span class="text-slate-400">Trạng Thái:</span>
+                            <select onchange="updateTaskStatus('task2', this.value)" id="status-task2" class="bg-slate-800 text-indigo-400 font-semibold rounded-md px-2 py-1 border border-slate-700 focus:outline-none text-xs">
+                                <option value="not_started" selected>⚪ Chưa Bắt Đầu</option>
+                                <option value="in_progress">🟡 Đang Tạo Features</option>
+                                <option value="completed">🟢 Đã Hoàn Thành</option>
+                            </select>
+                        </div>
+
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Định nghĩa Binary Target (Bùng nổ biến động 15m), trích xuất ít nhất 5 OHLCV features (Parkinson, OFI, Trade Density), Time-Aware CV (chống lookahead leakage), GBDT & Calibration.
+                        </p>
+
+                        <!-- Checklist -->
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Checklist Các Bước Cần Làm:</div>
+                            
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-2-1" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">2.1 Target Definition (Binary Target: Volatility Spike 15m)</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-2-2" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">2.2 Feature Engineering (Parkinson Vol, Garman-Klass, OFI ratio)</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-2-3" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug font-semibold text-rose-300"><i class="fa-solid fa-triangle-exclamation mr-1 text-rose-400"></i>2.3 Time-Aware CV (Purged & Embargoed Group K-Fold)</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-2-4" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">2.4 Model Training & Calibration (XGBoost/LightGBM)</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition bg-indigo-500/5 border border-indigo-500/10">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-2-5" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-indigo-300 leading-snug font-medium"><i class="fa-solid fa-star text-[10px] mr-1 text-indigo-400"></i>[Bonus] Rule-based Baseline vs GBDT Evaluation</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Footer Output -->
+                    <div class="mt-5 pt-3 border-t border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span>Đầu ra dự kiến:</span>
+                            <span class="font-mono text-indigo-400 font-semibold">Notebook 02 + Metrics Matrix</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="bar-task2" class="h-full bg-indigo-500 transition-all duration-300" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TASK 3 CARD -->
+                <div class="task-card glass-card rounded-2xl p-5 border-t-4 border-t-amber-500 flex flex-col justify-between" data-task="task3">
+                    <div class="space-y-4">
+                        <!-- Card Header -->
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-2">
+                                    TASK 3 — MỞ RỘNG (RESEARCH)
+                                </span>
+                                <h3 class="text-lg font-bold text-white">Phân Tích Chuyên Sâu</h3>
+                                <p class="text-xs text-slate-400 font-mono mt-0.5">Market Microstructure Deep Dive</p>
+                            </div>
+                            <div class="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/20">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs">
+                            <span class="text-slate-400">Trạng Thái:</span>
+                            <select onchange="updateTaskStatus('task3', this.value)" id="status-task3" class="bg-slate-800 text-amber-400 font-semibold rounded-md px-2 py-1 border border-slate-700 focus:outline-none text-xs">
+                                <option value="not_started" selected>⚪ Chưa Bắt Đầu</option>
+                                <option value="in_progress">🟡 Đang Kiểm Định Giả Thuyết</option>
+                                <option value="completed">🟢 Đã Hoàn Thành</option>
+                            </select>
+                        </div>
+
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Xác định hiện tượng cấu trúc thị trường (Order Flow Toxicity & Kyle's Lambda price impact), phân tích định lượng kèm 95% Confidence Interval từ Block Bootstrap.
+                        </p>
+
+                        <!-- Checklist -->
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Checklist Các Bước Cần Làm:</div>
+                            
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-3-1" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">3.1 Giả thuyết Hiện tượng (Kyle's Lambda & Tác động giá bất đối xứng)</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-3-2" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">3.2 Hồi quy Định lượng & Block Bootstrap 95% Confidence Interval</span>
+                            </label>
+
+                            <label class="checklist-item flex items-start space-x-2.5 p-2 rounded-lg hover:bg-slate-800/50 cursor-pointer transition">
+                                <input type="checkbox" onchange="toggleSubtask(this)" id="st-3-3" class="mt-0.5 rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-amber-500 focus:ring-offset-slate-900">
+                                <span class="text-xs text-slate-300 leading-snug">3.3 Đề xuất Hướng phát triển khi có dữ liệu L2 Orderbook/Tick Data</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Footer Output -->
+                    <div class="mt-5 pt-3 border-t border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span>Đầu ra dự kiến:</span>
+                            <span class="font-mono text-amber-400 font-semibold">Notebook 03 + Bootstrap Plot</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="bar-task3" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Execution Pipeline Flow Visualizer -->
+            <div class="glass-panel rounded-2xl p-6 space-y-4 border border-slate-800">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-diagram-project text-indigo-400"></i>
+                        <span>Sơ Đồ Luồng Thực Thi Data Pipeline (Execution Architecture)</span>
+                    </h3>
+                    <span class="text-xs font-mono text-slate-400">Modular Architecture (src/)</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2">
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2 text-center relative">
+                        <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-300 text-xs font-mono font-bold inline-flex items-center justify-center border border-slate-700 mb-1">1</span>
+                        <h4 class="text-xs font-bold text-white">src.data_quality</h4>
+                        <p class="text-[11px] text-slate-400">Lấp gap nến 1m, phát hiện bất thường, forward-fill giá close.</p>
+                        <i class="fa-solid fa-arrow-right hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 text-slate-600 text-xs z-10"></i>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-emerald-500/30 space-y-2 text-center relative">
+                        <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold inline-flex items-center justify-center border border-emerald-500/30 mb-1">2</span>
+                        <h4 class="text-xs font-bold text-emerald-400">src.signal_characterization</h4>
+                        <p class="text-[11px] text-slate-400">Task 1: Phân phối return, Kurtosis, Vol Regimes 60m, ACF.</p>
+                        <i class="fa-solid fa-arrow-right hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 text-slate-600 text-xs z-10"></i>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-indigo-500/30 space-y-2 text-center relative">
+                        <span class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-mono font-bold inline-flex items-center justify-center border border-indigo-500/30 mb-1">3</span>
+                        <h4 class="text-xs font-bold text-indigo-400">src.predictive_modeling</h4>
+                        <p class="text-[11px] text-slate-400">Task 2: Parkinson Vol, Purged CV, XGBoost vs Rule Baseline.</p>
+                        <i class="fa-solid fa-arrow-right hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 text-slate-600 text-xs z-10"></i>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-amber-500/30 space-y-2 text-center">
+                        <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 text-xs font-mono font-bold inline-flex items-center justify-center border border-amber-500/30 mb-1">4</span>
+                        <h4 class="text-xs font-bold text-amber-400">src.reporting</h4>
+                        <p class="text-[11px] text-slate-400">Task 3 & Report: Kyle's Lambda, Bootstrap CI, Báo cáo A4 HTML/PDF.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB 2: OVERVIEW & DATA SCHEMA -->
+        <div id="tab-content-overview" class="tab-pane hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Dataset Overview -->
+                <div class="lg:col-span-5 glass-panel rounded-2xl p-6 space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-file-csv text-emerald-400"></i>
+                        <span>Thông Tin Tập Dữ Liệu Thô</span>
+                    </h3>
+
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex justify-between">
+                            <span class="text-slate-400">Tên Tập Dữ Liệu:</span>
+                            <span class="text-emerald-400 font-bold">ds_assessment_data.csv</span>
+                        </div>
+                        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex justify-between">
+                            <span class="text-slate-400">Khung Thời Gian:</span>
+                            <span class="text-white">1 Phút (1-min Candles)</span>
+                        </div>
+                        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex justify-between">
+                            <span class="text-slate-400">Phạm Vi Thời Gian:</span>
+                            <span class="text-white">H2 2024 (Jul 2024 – Dec 2024)</span>
+                        </div>
+                        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex justify-between">
+                            <span class="text-slate-400">Tổng Số Bản Ghi:</span>
+                            <span class="text-indigo-400 font-bold">~260,000 Dòng</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-300 leading-relaxed">
+                        <i class="fa-solid fa-triangle-exclamation mr-1.5"></i>
+                        <strong>Lưu ý kỹ thuật:</strong> Dữ liệu chuỗi thời gian liên tục 1 phút yêu cầu xử lý vectorized trong Pandas/NumPy để đảm bảo tối ưu bộ nhớ RAM khi tính toán rolling windows 60m.
+                    </div>
+                </div>
+
+                <!-- Data Schema Table -->
+                <div class="lg:col-span-7 glass-panel rounded-2xl p-6 space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-table-list text-indigo-400"></i>
+                        <span>Cấu Trúc Các Cột Dữ Liệu (Schema)</span>
+                    </h3>
+
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-900/80 text-slate-400 uppercase font-mono text-[11px] border-b border-slate-800">
+                                <tr>
+                                    <th class="p-3">Tên Cột</th>
+                                    <th class="p-3">Mô Tả Chức Năng</th>
+                                    <th class="p-3">Ý Nghĩa Trong HFT</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/60">
+                                <tr class="hover:bg-slate-800/40">
+                                    <td class="p-3 font-mono text-indigo-400 font-semibold">timestamp</td>
+                                    <td class="p-3">Thời gian mở nến (UTC Datetime)</td>
+                                    <td class="p-3 text-slate-400">Index định vị thời gian chuỗi</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40">
+                                    <td class="p-3 font-mono text-emerald-400 font-semibold">open / high / low / close</td>
+                                    <td class="p-3">Giá Mở, Cao, Thấp và Đóng cửa</td>
+                                    <td class="p-3 text-slate-400">Tính Log Return, Parkinson Vol, Garman-Klass Vol</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40">
+                                    <td class="p-3 font-mono text-amber-400 font-semibold">volume</td>
+                                    <td class="p-3">Tổng khối lượng tài sản cơ sở</td>
+                                    <td class="p-3 text-slate-400">Đo lường thanh khoản & Volume spikes</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40">
+                                    <td class="p-3 font-mono text-slate-300">quote_volume</td>
+                                    <td class="p-3">Tổng giá trị giao dịch đồng định giá</td>
+                                    <td class="p-3 text-slate-400">Dòng tiền tính theo USD/USDT</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40">
+                                    <td class="p-3 font-mono text-cyan-400 font-semibold">trades</td>
+                                    <td class="p-3">Số lượng khớp lệnh riêng lẻ</td>
+                                    <td class="p-3 text-slate-400">Tính Trade Density (Volume/Trades)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/40">
+                                    <td class="p-3 font-mono text-purple-400 font-semibold">taker_buy_volume</td>
+                                    <td class="p-3">Khối lượng mua chủ động (Market Buy)</td>
+                                    <td class="p-3 text-slate-400">Tính Order Flow Imbalance (OFI Ratio)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: EVALUATION CRITERIA & DELIVERABLES -->
+        <div id="tab-content-criteria" class="tab-pane hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Evaluation Matrix -->
+                <div class="lg:col-span-7 glass-panel rounded-2xl p-6 space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-scale-balanced text-amber-400"></i>
+                        <span>Tiêu Chí Đánh Giá Kỹ Thuật (Evaluation Weights)</span>
+                    </h3>
+
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-white">Modeling & Methodology (Phương pháp & Mô hình)</span>
+                                <span class="text-indigo-400 font-mono">35%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-indigo-500" style="width: 35%;"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">Lựa chọn mô hình phù hợp, Feature Engineering domain-informed, Time-Aware CV chống leakage.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-white">Statistical Depth (Độ sâu phân tích thống kê)</span>
+                                <span class="text-emerald-400 font-mono">25%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-500" style="width: 25%;"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">Hiểu biết về phân phối Fat-tail, Volatility Regimes, Uncertainty Quantification (Block Bootstrap 95% CI).</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-white">Code Quality & Reproducibility (Chất lượng mã nguồn)</span>
+                                <span class="text-cyan-400 font-mono">20%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-cyan-500" style="width: 20%;"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">Code tái lập được 100%, mô-đun hóa sạch sẽ trong src/, docstrings và type hints chuẩn mực.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-white">Communication & Transparency (Khả năng trình bày)</span>
+                                <span class="text-amber-400 font-mono">20%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-amber-500" style="width: 20%;"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">Giải thích rõ các quyết định, giả định nghiệp vụ, hạn chế mô hình và báo cáo kỹ thuật 3 trang A4.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deliverables List -->
+                <div class="lg:col-span-5 glass-panel rounded-2xl p-6 space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-box-archive text-emerald-400"></i>
+                        <span>Danh Mục Đầu Ra Bắt Buộc (Deliverables)</span>
+                    </h3>
+
+                    <div class="space-y-3 font-sans text-xs">
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-start space-x-3">
+                            <div class="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg"><i class="fa-brands fa-python"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">1. Code Phân Tích & Mô Hình Hoá</h4>
+                                <p class="text-slate-400 text-[11px] mt-0.5">Thư mục <code class="text-indigo-300 font-mono">src/</code> chuẩn hóa + 3 Jupyter Notebooks tái lập được 100%.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-start space-x-3">
+                            <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg"><i class="fa-solid fa-chart-line"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">2. Biểu Đồ Trực Quan Hoá (High-DPI)</h4>
+                                <p class="text-slate-400 text-[11px] mt-0.5">Xuất các file đồ thị phân phối, regimes, calibration curve vào thư mục <code class="text-emerald-300 font-mono">reports/figures/</code>.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-start space-x-3">
+                            <div class="p-2 bg-amber-500/10 text-amber-400 rounded-lg"><i class="fa-solid fa-file-pdf"></i></div>
+                            <div>
+                                <h4 class="font-bold text-white">3. Báo Cáo Kỹ Thuật (Technical Report)</h4>
+                                <p class="text-slate-400 text-[11px] mt-0.5">Tóm tắt phương pháp luận & phát hiện chính (Tối đa 3 trang A4 định dạng HTML / PDF).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 4: RESULTS & DETAILED REPORTS (PLACEHOLDER) -->
+        <div id="tab-content-results" class="tab-pane hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6 space-y-6">
+                
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-lg font-bold text-white">Khu Vực Báo Cáo Kỹ Thuật & Kết Quả EDA Chi Tiết</h3>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full">Khu Vực Mở Rộng</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Các biểu đồ phân tích thực nghiệm và báo cáo kỹ thuật 3 trang A4 sẽ được liên kết và cập nhật tại đây.</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button onclick="simulateEdaUpdate()" class="px-3 py-1.5 text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition shadow-sm flex items-center space-x-1.5">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            <span>Cập Nhật Biểu Đồ Demo EDA</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Summary Mockup -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block font-mono">DOANH SỐ RETURN KHUNG 1M</span>
+                        <div class="text-lg font-extrabold text-emerald-400 mt-1 font-mono">Kurtosis = 14.82</div>
+                        <span class="text-[10px] text-slate-400">Phân phối đuôi rất béo (Fat-tailed)</span>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block font-mono">CHẾ ĐỘ BIẾN ĐỘNG (60M)</span>
+                        <div class="text-lg font-extrabold text-indigo-400 mt-1 font-mono">2 Regimes</div>
+                        <span class="text-[10px] text-slate-400">High Vol vs Low Vol Regime</span>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block font-mono">HIỆU NĂNG MÔ HÌNH XGBOOST</span>
+                        <div class="text-lg font-extrabold text-purple-400 mt-1 font-mono">ROC-AUC = 0.742</div>
+                        <span class="text-[10px] text-slate-400">Vượt xa Rule-based Baseline (0.580)</span>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block font-mono">KYLE'S LAMBDA (PRICE IMPACT)</span>
+                        <div class="text-lg font-extrabold text-amber-400 mt-1 font-mono">95% CI Bootstrap</div>
+                        <span class="text-[10px] text-slate-400">Ý nghĩa thống kê p < 0.001</span>
+                    </div>
+                </div>
+
+                <!-- Charts Grid Placeholder -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+                    
+                    <!-- Chart 1: Returns Distribution -->
+                    <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-2">
+                                <i class="fa-solid fa-chart-area text-emerald-400"></i>
+                                <span>Phân Phối Return 1m vs Phân Phối Chuẩn</span>
+                            </h4>
+                            <span class="text-[10px] font-mono text-slate-400">Task 1 Feature</span>
+                        </div>
+                        <div class="h-56 relative flex items-center justify-center">
+                            <canvas id="chart-returns-dist"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Volatility Regimes -->
+                    <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center space-x-2">
+                                <i class="fa-solid fa-chart-line text-indigo-400"></i>
+                                <span>Độ Biến Động Trượt 60m & 2 Volatility Regimes</span>
+                            </h4>
+                            <span class="text-[10px] font-mono text-slate-400">Rolling 60m Window</span>
+                        </div>
+                        <div class="h-56 relative flex items-center justify-center">
+                            <canvas id="chart-volatility-regimes"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel mt-12 border-t border-slate-800 py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="text-xs text-slate-400 font-mono">
+                HFT Market Data Analytics Dashboard &copy; 2026. Built for High-Frequency Quantitative Data Analysis.
+            </p>
+            <p class="text-[11px] text-slate-400">
+                Data Source: <code class="text-slate-400">ds_assessment_data.csv</code> (H2 2024 ~260,000 lines) | Time-Aware Cross-Validation Purged & Embargoed.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript Logic -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
