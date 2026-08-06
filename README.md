@@ -1,5 +1,5 @@
-# BÀI ĐÁNH GIÁ KỸ THUẬT (TECHNICAL ASSESSMENT) — DATA SCIENTIST
-## Phân Tích Dữ Liệu Thị Trường Tần Suất Cao (High-Frequency Market Data H2 2024)
+# High-Frequency Market Data Architecture & Analytics
+## Phân Tích Dữ Liệu Thị Trường Tần Suất Cao & Mô Hình Dự Báo Biến Động (H2 2024)
 
 ---
 
@@ -7,7 +7,7 @@
 
 Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Quantitative Data Science Architecture) hoàn chỉnh, có khả năng tái lập 100%, được thiết kế chuyên biệt để phân tích dữ liệu thị trường tần suất cao khung thời gian 1 phút trong nửa cuối năm 2024 (Tháng 7 – Tháng 12 năm 2024, bao gồm ~260,000 nến chuỗi thời gian liên tục).
 
-### Mục tiêu cốt lõi: Thực hiện đầy đủ 3 Task bắt buộc
+### Các Mô-Đun Phân Tích Cốt Lõi
 1. **Task 1 — Đặc Trưng Hóa Tín Hiệu (Signal Characterization):** Phân tích thống kê chi tiết phân phối tỷ suất lợi nhuận 1 phút (close-to-close), đo lường độ nhọn (kurtosis) và đặc tính đuôi béo (fat-tailed), xác định 2 chế độ biến động (volatility regimes) trên cửa sổ trượt 60 phút, phân tích mối quan hệ giữa Khối lượng (`volume`), Số giao dịch (`trades`) và Biên độ giá, kiểm tra tự tương quan (autocorrelation) và đảm bảo chất lượng dữ liệu.
 2. **Task 2 — Mô Hình Dự Đoán (Predictive Modeling):** Định nghĩa mục tiêu nhị phân (Binary Target: Bùng nổ biến động 15 phút tới), tạo ít nhất 6 đặc trưng kỹ thuật domain-informed từ nến OHLCV, áp dụng chiến lược kiểm lỗi chéo theo thời gian **Time-Aware Cross-Validation (Purged & Embargoed CV — tuyệt đối không rò rỉ dữ liệu tương lai)**, huấn luyện mô hình XGBoost/LightGBM so sánh với Rule-based Baseline, và đánh giá hiệu chỉnh xác suất (Probability Calibration).
 3. **Task 3 — Phân Tích Chuyên Sâu (Deep Dive):** Đề xuất giả thuyết định lượng về hiện tượng cấu trúc thị trường (Order Flow Toxicity & Tác động giá bất đối xứng Kyle's Lambda), thực hiện kiểm định thống kê kèm định lượng độ bất định (Uncertainty Quantification bằng 95% Confidence Interval từ Block Bootstrap), và nêu rõ hướng phát triển khi có dữ liệu tick/order book L2.
