@@ -73,22 +73,34 @@ body {
 }
 
 /* Custom Scrollbars */
-.custom-scrollbar::-webkit-scrollbar {
+/* Scrollbar Styling */
+::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
-
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.6);
+::-webkit-scrollbar-track {
+    background: #0b0f19;
 }
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(100, 116, 139, 0.4);
+::-webkit-scrollbar-thumb {
+    background: #1f2937;
     border-radius: 4px;
 }
+::-webkit-scrollbar-thumb:hover {
+    background: #374151;
+}
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(148, 163, 184, 0.7);
+/* MathJax Inline Formula Fix - Strictly Prevent Line Breaks */
+mjx-container, mjx-container[jax="CHTML"]:not([display="true"]), mjx-container[jax="SVG"]:not([display="true"]) {
+    display: inline-block !important;
+    margin: 0 1px !important;
+    padding: 0 !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+}
+
+mjx-container[display="true"] {
+    display: block !important;
+    margin: 0.5em 0 !important;
 }
 
 /* Checklist Item Styles */

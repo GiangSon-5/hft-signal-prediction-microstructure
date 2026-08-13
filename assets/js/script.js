@@ -1,29 +1,13 @@
 /**
  * HFT Market Data Analytics - Dashboard Script
- * Manages tab switching, task state, progress tracking, and chart rendering.
+ * Manages tab switching, task filtering, and Chart.js rendering.
  */
-
-// All Subtask Identifiers
-const SUBTASKS = [
-    'st-1-1', 'st-1-2', 'st-1-3', 'st-1-4', 'st-1-5',
-    'st-2-1', 'st-2-2', 'st-2-3', 'st-2-4', 'st-2-5',
-    'st-3-1', 'st-3-2', 'st-3-3'
-];
-
-// Mapping Subtasks to Tasks
-const TASK_MAP = {
-    'task1': ['st-1-1', 'st-1-2', 'st-1-3', 'st-1-4', 'st-1-5'],
-    'task2': ['st-2-1', 'st-2-2', 'st-2-3', 'st-2-4', 'st-2-5'],
-    'task3': ['st-3-1', 'st-3-2', 'st-3-3']
-};
 
 let returnsChart = null;
 let regimesChart = null;
 
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
-    loadChecklistState();
-    updateAllProgressBars();
     initCharts();
 });
 
@@ -47,106 +31,49 @@ function switchTab(tabName) {
         activeNav.classList.remove('text-slate-400');
         activeNav.classList.add('text-white', 'bg-indigo-600/30', 'border', 'border-indigo-500/40', 'shadow-sm');
     }
-}
 
-/**
- * Checkbox Toggle Handler
- */
-function toggleSubtask(checkbox) {
-    saveChecklistState();
-    updateAllProgressBars();
-}
-
-/**
- * LocalStorage State Management
- */
-function saveChecklistState() {
-    const state = {};
-    SUBTASKS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) state[id] = el.checked;
-    });
-    localStorage.setItem('hft_dashboard_subtasks', JSON.stringify(state));
-}
-
-function loadChecklistState() {
-    const saved = localStorage.getItem('hft_dashboard_subtasks');
-    if (saved) {
-        try {
-            const state = JSON.parse(saved);
-            Object.keys(state).forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.checked = state[id];
-            });
-        } catch (e) {
-            console.error('Error restoring checklist state:', e);
+    // Auto toggle dataset schema details visibility based on active tab
+    const schemaContainer = document.getElementById('dataset-schema-container');
+    const toggleBtnText = document.getElementById('schema-toggle-text');
+    const toggleBtnIcon = document.getElementById('schema-toggle-icon');
+    if (schemaContainer) {
+        if (tabName === 'roadmap') {
+            // Overview Tab: Show dataset schema & glossary by default
+            schemaContainer.classList.remove('hidden');
+            if (toggleBtnText) toggleBtnText.textContent = 'Ẩn Chi Tiết Dữ Liệu & Thuật Ngữ';
+            if (toggleBtnIcon) toggleBtnIcon.className = 'fa-solid fa-chevron-up text-xs';
+        } else {
+            // Child Tabs (Task 1, 2, 3, Report): Hide by default, user can expand via toggle button
+            schemaContainer.classList.add('hidden');
+            if (toggleBtnText) toggleBtnText.textContent = 'Xem Chi Tiết 9 Cột Dữ Liệu & Thuật Ngữ OHLCV';
+            if (toggleBtnIcon) toggleBtnIcon.className = 'fa-solid fa-chevron-down text-xs';
         }
+    }
+
+    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+        window.MathJax.typesetPromise();
     }
 }
 
-function resetAllChecklists() {
-    SUBTASKS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.checked = false;
-    });
-    saveChecklistState();
-    updateAllProgressBars();
-}
-
 /**
- * Progress Calculation Engine
+ * Toggle Dataset Schema & Glossary Container manually
  */
-function updateAllProgressBars() {
-    let totalChecked = 0;
-
-    Object.keys(TASK_MAP).forEach(taskKey => {
-        const list = TASK_MAP[taskKey];
-        let taskChecked = 0;
-        list.forEach(id => {
-            const el = document.getElementById(id);
-            if (el && el.checked) {
-                taskChecked++;
-                totalChecked++;
-            }
-        });
-
-        const pct = Math.round((taskChecked / list.length) * 100);
-        const bar = document.getElementById(`bar-${taskKey}`);
-        if (bar) bar.style.width = `${pct}%`;
-
-        // Update task status dropdown if 100% completed
-        const statusSelect = document.getElementById(`status-${taskKey}`);
-        if (statusSelect) {
-            if (pct === 100) {
-                statusSelect.value = 'completed';
-            } else if (pct > 0 && statusSelect.value === 'not_started') {
-                statusSelect.value = 'in_progress';
-            }
+function toggleDatasetSchema() {
+    const schemaContainer = document.getElementById('dataset-schema-container');
+    const toggleBtnText = document.getElementById('schema-toggle-text');
+    const toggleBtnIcon = document.getElementById('schema-toggle-icon');
+    if (schemaContainer) {
+        const isHidden = schemaContainer.classList.contains('hidden');
+        if (isHidden) {
+            schemaContainer.classList.remove('hidden');
+            if (toggleBtnText) toggleBtnText.textContent = 'Ẩn Chi Tiết Dữ Liệu & Thuật Ngữ';
+            if (toggleBtnIcon) toggleBtnIcon.className = 'fa-solid fa-chevron-up text-xs';
+        } else {
+            schemaContainer.classList.add('hidden');
+            if (toggleBtnText) toggleBtnText.textContent = 'Xem Chi Tiết 9 Cột Dữ Liệu & Thuật Ngữ OHLCV';
+            if (toggleBtnIcon) toggleBtnIcon.className = 'fa-solid fa-chevron-down text-xs';
         }
-    });
-
-    // Global Statistics
-    const globalPct = Math.round((totalChecked / SUBTASKS.length) * 100);
-    const globalBar = document.getElementById('global-progress-bar');
-    const globalText = document.getElementById('global-percent');
-    
-    if (globalBar) globalBar.style.width = `${globalPct}%`;
-    if (globalText) globalText.innerText = `${globalPct}%`;
-
-    const totalEl = document.getElementById('total-subtasks-count');
-    const completedEl = document.getElementById('completed-subtasks-count');
-    const remainingEl = document.getElementById('remaining-subtasks-count');
-
-    if (totalEl) totalEl.innerText = SUBTASKS.length;
-    if (completedEl) completedEl.innerText = totalChecked;
-    if (remainingEl) remainingEl.innerText = SUBTASKS.length - totalChecked;
-}
-
-/**
- * Task Status Change Handler
- */
-function updateTaskStatus(taskKey, value) {
-    console.log(`Updated status for ${taskKey}: ${value}`);
+    }
 }
 
 /**
@@ -247,15 +174,99 @@ function initCharts() {
 }
 
 /**
- * Simulate Live Chart Updates for Testing
+ * View Mode Toggle Handler (Executive vs Technical)
  */
-function simulateEdaUpdate() {
-    if (returnsChart) {
-        returnsChart.data.datasets[0].data = returnsChart.data.datasets[0].data.map(v => v * (0.9 + Math.random() * 0.2));
-        returnsChart.update();
-    }
-    if (regimesChart) {
-        regimesChart.data.datasets[0].data = regimesChart.data.datasets[0].data.map(v => v * (0.9 + Math.random() * 0.2));
-        regimesChart.update();
+function toggleViewMode(mode) {
+    const execBtn = document.getElementById('btn-mode-executive');
+    const techBtn = document.getElementById('btn-mode-technical');
+    
+    if (mode === 'executive') {
+        document.querySelectorAll('.tech-only').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.exec-only').forEach(el => el.classList.remove('hidden'));
+        
+        if (execBtn && techBtn) {
+            execBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+            execBtn.classList.remove('text-slate-400', 'hover:text-white');
+            techBtn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+            techBtn.classList.add('text-slate-400', 'hover:text-white');
+        }
+    } else {
+        document.querySelectorAll('.tech-only').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.exec-only').forEach(el => el.classList.add('hidden'));
+        
+        if (execBtn && techBtn) {
+            techBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+            techBtn.classList.remove('text-slate-400', 'hover:text-white');
+            execBtn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+            execBtn.classList.add('text-slate-400', 'hover:text-white');
+        }
     }
 }
+
+/**
+ * Quick Preview Modal Component
+ */
+const MODAL_DATA = {
+    signal: {
+        title: 'Đặc Trưng Signal & Phân Phối Return 1m',
+        img: 'reports/figures/01_returns_distribution.png',
+        desc: 'Phân phối tỷ suất lợi nhuận 1m (close-to-close) có đỉnh cực nhọn (Kurtosis = 65.49) và đuôi béo nặng được khớp chính xác bởi phân phối Student-t (df = 2.665 < 3). Kiểm định Jarque-Bera p = 0.0 bác bỏ hoàn toàn giả thuyết phân phối chuẩn.',
+        tab: 'task1'
+    },
+    predictive: {
+        title: 'Hiệu Năng Mô Hình XGBoost & Calibration',
+        img: 'reports/figures/02_roc_pr_calibration.png',
+        desc: 'Mô hình XGBoost dự báo bùng nổ biến động 15m đạt ROC-AUC 0.748 và PR-AUC 0.525 out-of-fold từ kiểm lỗi chéo Purged & Embargoed Time-Series CV 5-Fold. Hiệu chỉnh xác suất Isotonic Calibration giảm Brier Score xuống 0.124.',
+        tab: 'task2'
+    },
+    deepdive: {
+        title: 'Tác Động Giá Kyle\'s Lambda & Bootstrap 95% CI',
+        img: 'reports/figures/03_kyles_lambda_bootstrap.png',
+        desc: 'Hệ số tác động giá Kyle\'s Lambda tăng vọt 4.4 lần ở Regime High Volatility (lambda_high = 0.00185 vs lambda_low = 0.00042). Phương pháp Block Bootstrap 1,000 lượt khẳng định ý nghĩa thống kê p = 0.0001.',
+        tab: 'task3'
+    },
+    schema: {
+        title: 'Cấu Trúc Ma Trận Feature & Data Quality',
+        img: 'reports/figures/01_returns_qqplot.png',
+        desc: 'Tập dữ liệu 264,961 bản ghi OHLCV 1m H2 2024 được làm sạch 100% (0% gap time-series). Trích xuất 6 đặc trưng vi mô domain-informed: Parkinson Vol 15m, Garman-Klass Vol 15m, OFI Ratio, Trade Density, Volume Spike Z-score 60m, Return Momentum 15m.',
+        tab: 'docs'
+    }
+};
+
+function openPreviewModal(type) {
+    const data = MODAL_DATA[type];
+    if (!data) return;
+
+    const modal = document.getElementById('preview-modal');
+    const titleEl = document.getElementById('modal-title-text');
+    const imgEl = document.getElementById('modal-img');
+    const descEl = document.getElementById('modal-desc');
+    const jumpBtn = document.getElementById('modal-jump-btn');
+
+    if (modal && titleEl && descEl && jumpBtn) {
+        titleEl.textContent = data.title;
+        descEl.textContent = data.desc;
+        
+        if (imgEl && data.img) {
+            imgEl.src = data.img;
+            imgEl.classList.remove('hidden');
+        } else if (imgEl) {
+            imgEl.classList.add('hidden');
+        }
+
+        jumpBtn.onclick = () => {
+            closePreviewModal();
+            switchTab(data.tab);
+        };
+
+        modal.classList.remove('hidden');
+    }
+}
+
+function closePreviewModal() {
+    const modal = document.getElementById('preview-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+

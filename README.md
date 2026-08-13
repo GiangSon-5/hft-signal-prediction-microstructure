@@ -25,7 +25,7 @@ Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Qu
 
 | Tầng Công Nghệ | Công Cụ / Thư Viện | Lý Do Lựa Chọn & Vai Trò |
 | :--- | :--- | :--- |
-| **Ngôn ngữ Lõi** | Python 3.10+ | Chuẩn mực ngành cho Quantitative Finance & Data Science. |
+| **Ngôn ngữ Lõi** | Python 3.11+ | Chuẩn mực ngành cho Quantitative Finance & Data Science. |
 | **Xử lý Dữ liệu** | `pandas`, `numpy` | Biến đổi chuỗi thời gian vectorized tốc độ cao, tính toán cửa sổ trượt (rolling window) tối ưu bộ nhớ. |
 | **Phân Tích Thống Kê** | `scipy.stats`, `statsmodels` | Kiểm định Jarque-Bera, khớp phân phối Student-t, tính toán hệ số tự tương quan ACF/PACF và kiểm định giả thuyết. |
 | **Mô Hình Học Máy** | `scikit-learn`, `xgboost`, `lightgbm` | Mô hình cây quyết định tăng cường gradient (GBDT) học quan hệ phi tuyến; kiểm lỗi Time-Series CV chống lookahead leakage. |
@@ -39,7 +39,6 @@ Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Qu
 ```
 ├── README.md                               # Tài liệu Kiến trúc Master (Tiếng Việt)
 ├── requirements.txt                        # Khai báo thư viện Python bắt buộc
-├── environment.yml                         # Khai báo môi trường Conda
 ├── ds_assessment_data.csv                  # File dữ liệu thô H2 2024 (~260,000 dòng)
 ├── data/
 │   ├── raw/                                # Lưu trữ file thô ban đầu
@@ -163,34 +162,27 @@ Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Qu
 
 ## 6. Hướng Dẫn Cài Đặt & Thực Thi Hệ Thống (Installation & Quickstart Guide)
 
-### 6.1 Cài Đặt Môi Trường Làm Việc
+### 6.1 Cài Đặt Môi Trường Với `uv` (Khuyên Dùng - Siêu Tốc)
 
-#### Phương Án 1: Sử Dụng Conda (Khuyên Dùng - Tái Lập 100%)
 ```bash
 # 1. Clone repository về máy local
 git clone https://github.com/GiangSon-5/hft-signal-prediction-microstructure.git
 cd hft-signal-prediction-microstructure
 
-# 2. Tạo môi trường ảo từ file environment.yml
-conda env create -f environment.yml
+# 2. Tạo môi trường ảo .venv với Python 3.11 sử dụng uv
+uv venv .venv --python 3.11
 
-# 3. Kích hoạt môi trường
-conda activate hft_ds_assessment
-```
+# 3. Kích hoạt môi trường (Windows PowerShell)
+.\.venv\Scripts\activate
 
-#### Phương Án 2: Sử Dụng Python venv & Pip
-```bash
-# 1. Tạo môi trường ảo venv
-python -m venv venv
+# 3b. Kích hoạt môi trường (Linux / macOS)
+source .venv/bin/activate
 
-# 2. Kích hoạt môi trường (Windows PowerShell)
-.\venv\Scripts\activate
+# 4. Cài đặt toàn bộ thư viện từ requirements.txt qua uv pip
+uv pip install -r requirements.txt
 
-# 2b. Kích hoạt môi trường (Linux / macOS)
-source venv/bin/activate
-
-# 3. Cài đặt các thư viện bắt buộc
-pip install -r requirements.txt
+# 5. Đăng ký Kernel cho Jupyter Notebook
+python -m ipykernel install --user --name hft_ds_py311 --display-name "Python 3.11 (.venv)"
 ```
 
 ---
