@@ -92,6 +92,55 @@ function filterTasks(filter) {
 }
 
 /**
+ * Filter Sections on Overview Tab dynamically
+ */
+function filterOverviewTab(taskFilter) {
+    const secT1Req = document.getElementById('ov-sec-task1-req');
+    const secT1Ext = document.getElementById('ov-sec-task1-ext');
+    const secT2Req = document.getElementById('ov-sec-task2-req');
+    const secT2Ext = document.getElementById('ov-sec-task2-ext');
+    const secT3Deep = document.getElementById('ov-sec-task3-deep');
+
+    const btnAll = document.getElementById('btn-ov-all');
+    const btnT1 = document.getElementById('btn-ov-t1');
+    const btnT2 = document.getElementById('btn-ov-t2');
+    const btnT3 = document.getElementById('btn-ov-t3');
+
+    // Reset button styles
+    [btnAll, btnT1, btnT2, btnT3].forEach(btn => {
+        if (btn) {
+            btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-slate-900/90 text-slate-400 border border-slate-800 hover:text-white hover:border-slate-700";
+        }
+    });
+
+    if (taskFilter === 'all') {
+        if (btnAll) btnAll.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-lg shadow-cyan-500/10";
+        [secT1Req, secT1Ext, secT2Req, secT2Ext, secT3Deep].forEach(el => el && el.classList.remove('hidden'));
+    } else if (taskFilter === 'task1') {
+        if (btnT1) btnT1.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-lg shadow-emerald-500/10";
+        if (secT1Req) secT1Req.classList.remove('hidden');
+        if (secT1Ext) secT1Ext.classList.remove('hidden');
+        if (secT2Req) secT2Req.classList.add('hidden');
+        if (secT2Ext) secT2Ext.classList.add('hidden');
+        if (secT3Deep) secT3Deep.classList.add('hidden');
+    } else if (taskFilter === 'task2') {
+        if (btnT2) btnT2.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 shadow-lg shadow-indigo-500/10";
+        if (secT1Req) secT1Req.classList.add('hidden');
+        if (secT1Ext) secT1Ext.classList.add('hidden');
+        if (secT2Req) secT2Req.classList.remove('hidden');
+        if (secT2Ext) secT2Ext.classList.remove('hidden');
+        if (secT3Deep) secT3Deep.classList.add('hidden');
+    } else if (taskFilter === 'task3') {
+        if (btnT3) btnT3.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold font-mono transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-lg shadow-amber-500/10";
+        if (secT1Req) secT1Req.classList.add('hidden');
+        if (secT1Ext) secT1Ext.classList.add('hidden');
+        if (secT2Req) secT2Req.classList.add('hidden');
+        if (secT2Ext) secT2Ext.classList.add('hidden');
+        if (secT3Deep) secT3Deep.classList.remove('hidden');
+    }
+}
+
+/**
  * Chart.js Visualization Engine
  */
 function initCharts() {
