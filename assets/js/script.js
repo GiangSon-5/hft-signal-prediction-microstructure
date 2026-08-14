@@ -37,17 +37,10 @@ function switchTab(tabName) {
     const toggleBtnText = document.getElementById('schema-toggle-text');
     const toggleBtnIcon = document.getElementById('schema-toggle-icon');
     if (schemaContainer) {
-        if (tabName === 'roadmap') {
-            // Overview Tab: Show dataset schema & glossary by default
-            schemaContainer.classList.remove('hidden');
-            if (toggleBtnText) toggleBtnText.textContent = 'Ẩn Chi Tiết Dữ Liệu & Thuật Ngữ';
-            if (toggleBtnIcon) toggleBtnIcon.className = 'fa-solid fa-chevron-up text-xs';
-        } else {
-            // Child Tabs (Task 1, 2, 3, Report): Hide by default, user can expand via toggle button
-            schemaContainer.classList.add('hidden');
-            if (toggleBtnText) toggleBtnText.textContent = 'Xem Chi Tiết 9 Cột Dữ Liệu & Thuật Ngữ OHLCV';
-            if (toggleBtnIcon) toggleBtnIcon.className = 'fa-solid fa-chevron-down text-xs';
-        }
+        // Keep dataset schema hidden by default on tab switch so Overview tab remains clean and un-cluttered
+        schemaContainer.classList.add('hidden');
+        if (toggleBtnText) toggleBtnText.textContent = 'Xem Chi Tiết 9 Cột Dữ Liệu & Thuật Ngữ OHLCV';
+        if (toggleBtnIcon) toggleBtnIcon.className = 'fa-solid fa-chevron-down text-xs';
     }
 
     if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
