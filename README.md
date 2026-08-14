@@ -202,3 +202,25 @@ python -m ipykernel install --user --name hft_ds_py311 --display-name "Python 3.
    ```bash
    python -m src.reporting.generate_report
    ```
+
+---
+
+## 7. Bảng Tóm Tắt Kết Quả Thực Nghiệm Task 1 & Lộ Trình Chuyển Giao Task 2
+
+### 7.1 Kết Quả Thực Nghiệm Định Lượng Task 1 (Task 1 Empirical Results Summary)
+
+| Hạng Mục Kiểm Định | Thuật Toán & Phương Pháp | Kết Quả Định Lượng Thực Nghiệm | Kết Luận & Ý Nghĩa Quản Trị Rủi Ro |
+| :--- | :--- | :--- | :--- |
+| **Data Integrity Audit** | Grid 1m Audit & Forward-fill | **100% Sạch** ($N = 264,961$ nến, 0 Gap, 0 Lỗi OHLCV) | Dữ liệu đạt độ toàn vẹn tuyệt đối H2 2024, không cần tạo nến ảo. |
+| **Phân Phối Return 1m** | Jarque-Bera Test & Student-t | $JB = 47,347,809.45$ ($p = 0.0$), $df = 2.665 < 3.0$ | Bác bỏ phân phối chuẩn; 100% thuộc tính đuôi béo (Fat-tails). |
+| **Volatility Regimes** | Rolling Std 60m & Quantile $Q_{0.75}$ | Low Vol: 75% ($<55.61\%$), High Vol: 25% ($\ge 55.61\%$) | Xác nhận hiện tượng cụm biến động (Volatility Clustering). |
+| **Volume - Trades - Price** | Spearman Rank Correlation | $r_{\text{Volume}} = +0.7601$, $r_{\text{Trades}} = +0.7184$ | Biến động giá lớn bắt buộc đi kèm CẢ Volume lớn LẪN Trades dồn dập. |
+| **Regime Fat-Tails** | Sub-sample Student-t Fit | Low Vol $df = 3.90$ vs High Vol $df = 1.990 \le 2.0$ | High Vol Regime rơi vào ranh giới Phương sai vô hạn (Infinite Variance Hazard). |
+| **Autocorrelation (ACF)** | ACF/PACF Lags 1-30m (95% CI) | Lag 1m $r_1 = -0.0057 < -0.0038$ ($p < 0.05$) | Hiện tượng Đảo chiều vi mô (Bid-Ask Bounce) & Chu kỳ bot TWAP (7-13m, 30m). |
+
+### 7.2 Lộ Trình Chuyển Giao Sang Task 2 (Task 2 Readiness & Feature Pipeline)
+
+1. **Định nghĩa Binary Target ($Y_t$):** Bùng nổ biến động 15m tới $Y_t = \mathbb{I}\left(\sigma_{fwd, 15m} \ge Q_{0.80}\right)$.
+2. **Bộ Đặc Trưng Vi Mô ($6+$ Features):** `parkinson_vol_15m`, `garman_klass_vol_15m`, `ofi_ratio`, `trade_density`, `volume_spike_z_60m`, `return_momentum_15m`.
+3. **Chiến Lược CV Chống Rò Rỉ:** Time-Aware Purged & Embargoed Group TimeSeries Split 5-Fold (Purge 15m, Embargo 30m).
+4. **Mô Hình & Hiệu Chỉnh:** Train GBDT (XGBoost/LightGBM) vs Rule-based Baseline, đánh giá ROC-AUC, PR-AUC và Isotonic Probability Calibration (Brier Score).
