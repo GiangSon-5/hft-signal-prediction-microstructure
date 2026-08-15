@@ -221,6 +221,42 @@ python -m ipykernel install --user --name hft_ds_py311 --display-name "Python 3.
 ### 7.2 Lộ Trình Chuyển Giao Sang Task 2 (Task 2 Readiness & Feature Pipeline)
 
 1. **Định nghĩa Binary Target ($Y_t$):** Bùng nổ biến động 15m tới $Y_t = \mathbb{I}\left(\sigma_{fwd, 15m} \ge Q_{0.80}\right)$.
-2. **Bộ Đặc Trưng Vi Mô ($6+$ Features):** `parkinson_vol_15m`, `garman_klass_vol_15m`, `ofi_ratio`, `trade_density`, `volume_spike_z_60m`, `return_momentum_15m`.
-3. **Chiến Lược CV Chống Rò Rỉ:** Time-Aware Purged & Embargoed Group TimeSeries Split 5-Fold (Purge 15m, Embargo 30m).
-4. **Mô Hình & Hiệu Chỉnh:** Train GBDT (XGBoost/LightGBM) vs Rule-based Baseline, đánh giá ROC-AUC, PR-AUC và Isotonic Probability Calibration (Brier Score).
+2. **Bộ Đặc Trưng Vi Mô ($8$ Features):** `parkinson_vol_15m`, `garman_klass_vol_15m`, `ofi_ratio`, `trade_density`, `volume_spike_z_60m`, `return_momentum_15m`, `rolling_vol_60m`, `spread_ratio_15m`.
+3. **Chiến Lược CV Chống Rò Rỉ:** Time-Aware Purged & Embargoed TimeSeries Split 5-Fold (Purge 15m, Embargo 30m).
+4. **Mô Hình & Hiệu Chỉnh:** Huấn luyện GBDT (HistGradientBoosting/XGBoost) vs Rule-based Baseline, đánh giá ROC-AUC, PR-AUC, F1-Score và Isotonic Probability Calibration (Brier Score).
+
+---
+
+### 7.3 Hướng Dẫn Tái Sử Dụng Thư Viện Cốt Lõi (`cleaner.py` & `analyzer.py`) Cho Task 2 & Task 3
+
+Toàn bộ logic xử lý dữ liệu và thuật toán toán học của Task 1 đã được đóng gói thành các hàm chuẩn trong tầng `src/` để tái sử dụng xuyên suốt dự án:
+
+#### 1. Thư Viện Tiền Xử Lý Dữ Liệu ([`src/data_quality/cleaner.py`](file:///c:/Users/Admin/Desktop/Data%20Scientist/src/data_quality/cleaner.py)):
+- **`audit_data_quality(df: pd.DataFrame) -> dict`**: Kiểm định toàn diện số lượng NaN, phân tích gaps $\Delta t > 1\text{m}$, phát hiện vi phạm logic OHLCV.
+- **`validate_and_clean_time_series(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]`**: Chuẩn hóa `timestamp` sang `Datetime64[ns]`, tái lập 1-min grid, lấp nến có điều kiện (Forward-fill Close, Zero-fill Volume).
+- *Cách dùng trong Task 2 & Task 3*:
+  ```python
+  from src.data_quality.cleaner import validate_and_clean_time_series
+  df_clean, audit = validate_and_clean_time_series(pd.read_csv('ds_assessment_data.csv'))
+  ```
+
+#### 2. Thư Viện Phân Tích Định Lượng ([`src/signal_characterization/analyzer.py`](file:///c:/Users/Admin/Desktop/Data%20Scientist/src/signal_characterization/analyzer.py)):
+- **`calculate_log_returns(df, col='close')`**: Tính tỷ suất lợi nhuận Log 1m: $r_t = \ln(P_t / P_{t-1})$.
+- **`analyze_returns_distribution(returns)`**: Tính Mean, Std, Skewness, Kurtosis, kiểm định Jarque-Bera và khớp Student-t $df$.
+- **`compute_rolling_volatility(returns, window=60)`**: Tính độ biến động trượt 60m quy năm ($\times \sqrt{525,600}$).
+- **`detect_volatility_regimes(rolling_vol, threshold_quantile=0.75)`**: Phân tách 2 Chế độ biến động Low Vol vs High Vol tại ngưỡng $Q_{0.75}$.
+- **`compare_volatility_regimes(returns, regimes)`**: So sánh Kurtosis và bậc tự do Student-t giữa các chế độ biến động.
+- **`analyze_volume_trades_range(df)`**: Tính ma trận tương quan Spearman giữa Volume, Trades và Price Range.
+- **`analyze_autocorrelation(returns, nlags=30)`**: Tính ACF/PACF 30 lags và dải tin cậy 95%.
+- *Cách dùng trong Task 2 & Task 3*:
+  ```python
+  from src.signal_characterization.analyzer import (
+      calculate_log_returns,
+      compute_rolling_volatility,
+      detect_volatility_regimes
+  )
+  df_clean['log_return'] = calculate_log_returns(df_clean)
+  df_clean['rolling_vol_60m'] = compute_rolling_volatility(df_clean['log_return'], window=60)
+  df_clean['regime'], cutoff = detect_volatility_regimes(df_clean['rolling_vol_60m'], threshold_quantile=0.75)
+  ```
+
