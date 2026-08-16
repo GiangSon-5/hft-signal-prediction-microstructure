@@ -137,7 +137,7 @@
                         <span class="px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-md">
                             <i class="fa-solid fa-chart-line mr-1.5"></i>Quantitative Research Architecture
                         </span>
-                        <span class="text-xs text-slate-400 font-mono">File: ds_assessment_data.csv (264,961 Bản Ghi OHLCV 1 Phút)</span>
+                        <span class="text-xs text-slate-400 font-mono">File: data/raw/ds_assessment_data.csv (264,961 Bản Ghi OHLCV 1 Phút)</span>
                     </div>
                     <div class="flex items-center space-x-2">
                         <button id="btn-toggle-schema" onclick="toggleDatasetSchema()" class="text-xs font-mono font-bold px-3 py-1 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 transition-all flex items-center space-x-1.5 shadow-sm">
@@ -182,7 +182,7 @@
                     <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-2">
                             <i class="fa-solid fa-table-list text-emerald-400"></i>
-                            <span>Chi Tiết 9 Cột Biến Số OHLCV Trong Tập Dữ Liệu Đầu Vào (File: ds_assessment_data.csv):</span>
+                            <span>Chi Tiết 9 Cột Biến Số OHLCV Trong Tập Dữ Liệu Đầu Vào (File: data/raw/ds_assessment_data.csv):</span>
                         </span>
                         <span class="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">264,961 Dòng x 9 Cột Thô</span>
                     </div>
@@ -735,7 +735,7 @@
                                     <span class="text-[10px] text-slate-400">Forward Realized Volatility 15m với ngưỡng phân vị $Q_{0.80}$.</span>
                                 </td>
                                 <td class="p-3.5 space-y-1">
-                                    <div class="text-white font-semibold">Ngưỡng bão giá $Q_{0.80} = 7.80\text{ bps}$ ($0.000780$).</div>
+                                    <div class="text-white font-semibold">Ngưỡng bão giá $Q_{0.80} = 8.23\text{ bps}$ ($0.000823$).</div>
                                     <p class="text-[11px] text-slate-300">Phân bố nhãn chuẩn xác: $80.00\%$ Normal Vol ($N = 211,956$) vs $20.00\%$ Vol Spike ($N = 52,990$). Ranh giới $15$ nến cuối chuỗi được xử lý chống rò rỉ.</p>
                                 </td>
                                 <td class="p-3.5 text-center font-mono">
@@ -778,7 +778,7 @@
                                 </td>
                                 <td class="p-3.5 space-y-1">
                                     <div class="text-white font-semibold">Loại trừ 100% Lookahead Leakage &amp; Information Bleeding.</div>
-                                    <p class="text-[11px] text-slate-300">Expanding Window tích lũy từ $44,132 \to 220,720$ nến. Tỷ lệ nhãn dương ổn định $\approx 20.0\%$ trên toàn bộ 5 Folds.</p>
+                                    <p class="text-[11px] text-slate-300">Expanding Window tích lũy từ $44,132 \to 220,720$ nến. Tỷ lệ nhãn dương thực tế: Fold 1 ($29.03\%$), Fold 2 ($13.35\%$), Fold 3 ($10.48\%$), Fold 4 ($26.58\%$), Fold 5 ($21.29\%$).</p>
                                 </td>
                                 <td class="p-3.5 text-center font-mono">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
@@ -798,8 +798,8 @@
                                     <span class="text-[10px] text-slate-400">GBDT Balanced + Isotonic Probability Calibration.</span>
                                 </td>
                                 <td class="p-3.5 space-y-1">
-                                    <div class="text-white font-semibold">ROC-AUC = 0.7652, PR-AUC = 0.5481, Brier = 0.1250.</div>
-                                    <p class="text-[11px] text-slate-300">PR-AUC vượt trội trên nền ngẫu nhiên $0.20$. Isotonic Calibration giảm Brier Score $-15.54\%$ (từ $0.148 \to 0.125$), đưa xác suất dự báo về trạng thái hoàn hảo.</p>
+                                    <div class="text-white font-semibold">ROC-AUC = 0.9081, PR-AUC = 0.7637, Brier = 0.0881.</div>
+                                    <p class="text-[11px] text-slate-300">PR-AUC đạt $0.7637$ vượt xa mức ngẫu nhiên $0.20$. Isotonic Calibration giảm Brier Score $-28.62\%$ (từ $0.1235 \to 0.0881$), đưa xác suất dự báo về trạng thái hoàn hảo.</p>
                                 </td>
                                 <td class="p-3.5 text-center font-mono">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
@@ -853,8 +853,8 @@
                                     <span class="text-[10px] text-slate-400">Baseline: $\mathbb{I}(Z_{vol} &gt; 1.5 \lor \sigma_P &gt; Q_{80})$.</span>
                                 </td>
                                 <td class="p-3.5 space-y-1">
-                                    <div class="text-white font-semibold">Value-Add Lift Áp Đảo: +25.03% ROC-AUC, +68.65% PR-AUC.</div>
-                                    <p class="text-[11px] text-slate-300">Baseline chỉ đạt ROC-AUC $0.6120$, PR-AUC $0.3250$, Brier $0.2240$. GBDT Machine Learning tạo ra bước nhảy vọt toàn diện về độ chính xác và khả năng lọc tín hiệu giả.</p>
+                                    <div class="text-white font-semibold">Value-Add Lift Vượt Trội: +6.06% ROC-AUC, +24.71% PR-AUC.</div>
+                                    <p class="text-[11px] text-slate-300">Baseline đạt ROC-AUC $0.8562$, PR-AUC $0.6124$, Brier $0.1700$. GBDT Machine Learning đạt ROC-AUC $0.9081$, PR-AUC $0.7637$, Brier $0.0881$, chứng minh giá trị gia tăng rõ rệt.</p>
                                 </td>
                                 <td class="p-3.5 text-center font-mono">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
@@ -874,8 +874,8 @@
                                     <span class="text-[10px] text-slate-400">Đo mức giảm ROC-AUC trên tập Out-of-Fold (OOF Test).</span>
                                 </td>
                                 <td class="p-3.5 space-y-1">
-                                    <div class="text-white font-semibold">Tín hiệu vi mô thực chất: Parkinson Vol, Spread Ratio &amp; Volume Z-Score.</div>
-                                    <p class="text-[11px] text-slate-300">Parkinson Volatility 15m chiếm vị trí số 1 ($\Delta \text{AUC} = 0.0845$), theo sau là Spread Ratio ($\Delta \text{AUC} = 0.0512$). Khẳng định mô hình học đúng bản chất cấu trúc sổ lệnh chứ không học vẹt nhiễu ngẫu nhiên.</p>
+                                    <div class="text-white font-semibold">Tín hiệu vi mô thực chất: Spread Ratio, Rolling Vol &amp; Garman-Klass.</div>
+                                    <p class="text-[11px] text-slate-300">`spread_ratio_15m` chiếm vị trí số 1 ($\Delta \text{AUC} = 0.0410$), theo sau là `rolling_vol_60m` ($\Delta \text{AUC} = 0.0387$). Cả 8 biến số đều có $\Delta \text{AUC} &gt; 0$ với sai số cực nhỏ, khẳng định mô hình học đúng cấu trúc kinh tế vi mô thực chất.</p>
                                 </td>
                                 <td class="p-3.5 text-center font-mono">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
@@ -1828,7 +1828,7 @@
                                 $$\sigma_{fwd, 15m, t} = \sqrt{\frac{1}{15} \sum_{k=1}^{15} \left(r_{t+k} - \bar{r}\right)^2}$$
                             </div>
                             <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
-                                <span class="text-slate-400 text-[11px] block font-sans font-semibold">2. Binary Spike Classification ($Q_{0.80} = 7.80\text{ bps}$):</span>
+                                <span class="text-slate-400 text-[11px] block font-sans font-semibold">2. Binary Spike Classification ($Q_{0.80} = 8.23\text{ bps}$):</span>
                                 $$Y_t = \begin{cases} 1, &amp; \text{khi } \sigma_{fwd, 15m, t} \ge Q_{0.80} \\ 0, &amp; \text{khi } \sigma_{fwd, 15m, t} &lt; Q_{0.80} \end{cases}$$
                             </div>
                         </div>
@@ -1839,9 +1839,9 @@
                         <div class="p-4 rounded-xl bg-gradient-to-br from-slate-900/95 to-slate-950 border-l-4 border-l-amber-500 border border-slate-800 space-y-2 shadow-lg shadow-amber-500/10">
                             <div class="flex items-center justify-between text-xs font-bold text-amber-400 font-mono">
                                 <span class="flex items-center space-x-1.5"><i class="fa-solid fa-filter"></i><span>1. Cut-off Threshold ($Q_{0.80}$)</span></span>
-                                <span class="px-2 py-0.5 text-[10px] rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">7.80 bps</span>
+                                <span class="px-2 py-0.5 text-[10px] rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">8.23 bps</span>
                             </div>
-                            <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">0.000780 (7.80 bps)</div>
+                            <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">0.000823 (8.23 bps)</div>
                             <p class="text-[11px] text-slate-300 leading-relaxed">Ngưỡng phân vị 80% phân định 20% các đợt bùng nổ biến động cực đại trong 15 phút tiếp theo.</p>
                         </div>
 
@@ -1851,7 +1851,7 @@
                                 <span class="px-2 py-0.5 text-[10px] rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">211,956 Mẫu</span>
                             </div>
                             <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">80.00% Dữ Liệu</div>
-                            <p class="text-[11px] text-slate-300 leading-relaxed">Trạng thái thị trường vận động bình thường, biên độ dao động 15m thấp hơn 7.80 bps.</p>
+                            <p class="text-[11px] text-slate-300 leading-relaxed">Trạng thái thị trường vận động bình thường, biên độ dao động 15m thấp hơn 8.23 bps.</p>
                         </div>
 
                         <div class="p-4 rounded-xl bg-gradient-to-br from-slate-900/95 to-slate-950 border-l-4 border-l-rose-500 border border-slate-800 space-y-2 shadow-lg shadow-rose-500/10">
@@ -1882,7 +1882,7 @@
                                 </li>
                                 <li class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 space-y-1">
                                     <strong class="text-rose-400 font-mono block">2. Bài Toán Phân Loại Lệch Lớp (80/20 Imbalance)</strong>
-                                    <p class="text-slate-300"><strong>Giải thích:</strong> Ngưỡng $Q_{0.80} = 7.80\text{ bps}$ thiết lập tỷ lệ lệch lớp 80% - 20%, phản ánh đúng bản chất rủi ro đuôi béo.</p>
+                                    <p class="text-slate-300"><strong>Giải thích:</strong> Ngưỡng $Q_{0.80} = 8.23\text{ bps}$ thiết lập tỷ lệ lệch lớp 80% - 20%, phản ánh đúng bản chất rủi ro đuôi béo.</p>
                                     <p class="text-amber-300"><strong>Yêu cầu đánh giá:</strong> Bắt buộc dùng <strong>PR-AUC</strong> và <strong>Brier Score</strong> thay vì Accuracy để đo lường thực chất năng lực dự báo.</p>
                                 </li>
                                 <li class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 space-y-1">
@@ -2035,7 +2035,7 @@
                             <ul class="space-y-3 text-[11px] leading-relaxed">
                                 <li class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 space-y-1">
                                     <strong class="text-white font-mono block">1. Sức Mạnh Dự Báo Của Nhóm Volatility Cực Trị</strong>
-                                    <p class="text-slate-300"><strong>Giải thích:</strong> `parkinson_vol_15m` và `spread_ratio_15m` có tương quan Spearman đơn biến mạnh nhất ($r_s \approx 0.52$) với Target 15m.</p>
+                                    <p class="text-slate-300"><strong>Giải thích:</strong> `spread_ratio_15m` và `rolling_vol_60m` có tương quan Spearman đơn biến mạnh nhất ($r_s \approx 0.52$) với Target 15m.</p>
                                     <p class="text-amber-300"><strong>Ý nghĩa:</strong> Độ mở rộng của dải giá trong 15 phút qua là tín hiệu dẫn dắt trực tiếp báo trước các đợt bùng nổ tiếp theo.</p>
                                 </li>
                                 <li class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 space-y-1">
@@ -2138,41 +2138,41 @@
                                     <td class="p-3 font-bold text-purple-400">Fold 1</td>
                                     <td class="p-3 text-white">44,132</td>
                                     <td class="p-3 text-amber-400">44,147</td>
-                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-07-31 09:32</td>
-                                    <td class="p-3 text-slate-300">2024-07-31 09:48 ➔ 2024-08-31 01:34</td>
-                                    <td class="p-3 text-right text-emerald-400">20.12%</td>
+                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-07-31 09:31</td>
+                                    <td class="p-3 text-slate-300">2024-07-31 09:47 ➔ 2024-08-31 01:33</td>
+                                    <td class="p-3 text-right text-emerald-400">29.03%</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 font-bold text-purple-400">Fold 2</td>
                                     <td class="p-3 text-white">88,279</td>
                                     <td class="p-3 text-amber-400">44,147</td>
-                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-08-31 01:19</td>
-                                    <td class="p-3 text-slate-300">2024-08-31 01:35 ➔ 2024-09-30 17:21</td>
-                                    <td class="p-3 text-right text-emerald-400">19.85%</td>
+                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-08-31 01:18</td>
+                                    <td class="p-3 text-slate-300">2024-08-31 01:34 ➔ 2024-09-30 17:20</td>
+                                    <td class="p-3 text-right text-emerald-400">13.35%</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 font-bold text-purple-400">Fold 3</td>
                                     <td class="p-3 text-white">132,426</td>
                                     <td class="p-3 text-amber-400">44,147</td>
-                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-09-30 17:06</td>
-                                    <td class="p-3 text-slate-300">2024-09-30 17:22 ➔ 2024-10-31 09:08</td>
-                                    <td class="p-3 text-right text-emerald-400">20.05%</td>
+                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-09-30 17:05</td>
+                                    <td class="p-3 text-slate-300">2024-09-30 17:21 ➔ 2024-10-31 09:07</td>
+                                    <td class="p-3 text-right text-emerald-400">10.48%</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 font-bold text-purple-400">Fold 4</td>
                                     <td class="p-3 text-white">176,573</td>
                                     <td class="p-3 text-amber-400">44,147</td>
-                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-10-31 08:53</td>
-                                    <td class="p-3 text-slate-300">2024-10-31 09:09 ➔ 2024-11-30 00:55</td>
-                                    <td class="p-3 text-right text-emerald-400">19.94%</td>
+                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-10-31 08:52</td>
+                                    <td class="p-3 text-slate-300">2024-10-31 09:08 ➔ 2024-12-01 00:54</td>
+                                    <td class="p-3 text-right text-emerald-400">26.58%</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 font-bold text-purple-400">Fold 5</td>
                                     <td class="p-3 text-white">220,720</td>
                                     <td class="p-3 text-amber-400">44,151</td>
-                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-11-30 00:40</td>
-                                    <td class="p-3 text-slate-300">2024-11-30 00:56 ➔ 2024-12-31 16:45</td>
-                                    <td class="p-3 text-right text-emerald-400">20.04%</td>
+                                    <td class="p-3 text-slate-400">2024-06-30 18:00 ➔ 2024-12-01 00:39</td>
+                                    <td class="p-3 text-slate-300">2024-12-01 00:55 ➔ 2024-12-31 16:45</td>
+                                    <td class="p-3 text-right text-emerald-400">21.29%</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2211,7 +2211,7 @@
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             <h3 class="text-base sm:text-lg font-extrabold text-white uppercase tracking-wider flex items-center space-x-2">
                                 <i class="fa-solid fa-chart-line-up text-emerald-400"></i>
-                                <span>4. Đối Chứng Hiệu Năng GBDT vs Baseline &amp; Hiệu Chuẩn Xác Suất (Calibration)</span>
+                                <span>4. Đối Chúng Hiệu Năng GBDT vs Baseline &amp; Hiệu Chuẩn Xác Suất (Calibration)</span>
                             </h3>
                             <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/20 font-bold">Figure 02_roc_pr_calibration.png</span>
                         </div>
@@ -2246,27 +2246,27 @@
                         <div class="p-4 rounded-xl bg-gradient-to-br from-slate-900/95 to-slate-950 border-l-4 border-l-emerald-500 border border-slate-800 space-y-2 shadow-lg shadow-emerald-500/10">
                             <div class="flex items-center justify-between text-xs font-bold text-emerald-400 font-mono">
                                 <span class="flex items-center space-x-1.5"><i class="fa-solid fa-trophy"></i><span>1. ROC-AUC (Toàn Diện)</span></span>
-                                <span class="px-2 py-0.5 text-[10px] rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">+25.03% Lift</span>
+                                <span class="px-2 py-0.5 text-[10px] rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">+6.06% Lift</span>
                             </div>
-                            <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">0.7652 (vs Base 0.6120)</div>
+                            <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">0.9081 (vs Base 0.8562)</div>
                             <p class="text-[11px] text-slate-300 leading-relaxed">GBDT đạt năng lực phân loại toàn diện vượt trội so với Rule-Based Baseline.</p>
                         </div>
 
                         <div class="p-4 rounded-xl bg-gradient-to-br from-slate-900/95 to-slate-950 border-l-4 border-l-cyan-500 border border-slate-800 space-y-2 shadow-lg shadow-cyan-500/10">
                             <div class="flex items-center justify-between text-xs font-bold text-cyan-400 font-mono">
                                 <span class="flex items-center space-x-1.5"><i class="fa-solid fa-bullseye"></i><span>2. PR-AUC (Lệch Lớp 80/20)</span></span>
-                                <span class="px-2 py-0.5 text-[10px] rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">+68.65% Lift</span>
+                                <span class="px-2 py-0.5 text-[10px] rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">+24.71% Lift</span>
                             </div>
-                            <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">0.5481 (vs Base 0.3250)</div>
+                            <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">0.7637 (vs Base 0.6124)</div>
                             <p class="text-[11px] text-slate-300 leading-relaxed">Vượt xa mức ngẫu nhiên 0.20, thể hiện khả năng bắt đỉnh bão giá 15m cực kỳ xuất sắc.</p>
                         </div>
 
                         <div class="p-4 rounded-xl bg-gradient-to-br from-slate-900/95 to-slate-950 border-l-4 border-l-purple-500 border border-slate-800 space-y-2 shadow-lg shadow-purple-500/10">
                             <div class="flex items-center justify-between text-xs font-bold text-purple-400 font-mono">
                                 <span class="flex items-center space-x-1.5"><i class="fa-solid fa-calculator"></i><span>3. Brier Score (Isotonic)</span></span>
-                                <span class="px-2 py-0.5 text-[10px] rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">-15.54% Error</span>
+                                <span class="px-2 py-0.5 text-[10px] rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">-28.62% Error</span>
                             </div>
-                            <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">0.12500 (vs Raw 0.148)</div>
+                            <div class="text-lg sm:text-xl font-extrabold text-white font-mono tracking-tight">0.08813 (vs Raw 0.1235)</div>
                             <p class="text-[11px] text-slate-300 leading-relaxed">Hiệu chuẩn Isotonic Regression giúp xác suất dự báo khớp sát với tần suất thực tế.</p>
                         </div>
                     </div>
@@ -2285,33 +2285,33 @@
                             <tbody class="divide-y divide-slate-800/80 bg-slate-950/60 font-mono text-[11px]">
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3.5 font-bold text-white">ROC-AUC (Toàn diện)</td>
-                                    <td class="p-3.5 text-slate-400">0.6120</td>
-                                    <td class="p-3.5 font-bold text-emerald-400">0.7652</td>
-                                    <td class="p-3.5 text-right font-bold text-emerald-400">+25.03%</td>
+                                    <td class="p-3.5 text-slate-400">0.8562</td>
+                                    <td class="p-3.5 font-bold text-emerald-400">0.9081</td>
+                                    <td class="p-3.5 text-right font-bold text-emerald-400">+6.06%</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all bg-emerald-500/5">
                                     <td class="p-3.5 font-bold text-white">PR-AUC (Precision-Recall)</td>
-                                    <td class="p-3.5 text-slate-400">0.3250</td>
-                                    <td class="p-3.5 font-bold text-cyan-400">0.5481</td>
-                                    <td class="p-3.5 text-right font-bold text-cyan-400 text-sm">+68.65%</td>
+                                    <td class="p-3.5 text-slate-400">0.6124</td>
+                                    <td class="p-3.5 font-bold text-cyan-400">0.7637</td>
+                                    <td class="p-3.5 text-right font-bold text-cyan-400 text-sm">+24.71%</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3.5 font-bold text-white">Brier Score (Sai số xác suất)</td>
-                                    <td class="p-3.5 text-rose-400">0.2240</td>
-                                    <td class="p-3.5 font-bold text-purple-400">0.1480 (Raw) ➔ 0.1250 (Calibrated)</td>
-                                    <td class="p-3.5 text-right font-bold text-purple-400">-44.20% (Tốt Hơn Rất Nhiều)</td>
+                                    <td class="p-3.5 text-rose-400">0.1700</td>
+                                    <td class="p-3.5 font-bold text-purple-400">0.1235 (Raw) ➔ 0.0881 (Calibrated)</td>
+                                    <td class="p-3.5 text-right font-bold text-purple-400">-48.16% (Tốt Hơn Rất Nhiều)</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3.5 font-bold text-white">Log Loss (Cross-Entropy)</td>
-                                    <td class="p-3.5 text-rose-400">0.7850</td>
-                                    <td class="p-3.5 font-bold text-emerald-400">0.4620</td>
-                                    <td class="p-3.5 text-right font-bold text-emerald-400">-41.15% (Tốt Hơn)</td>
+                                    <td class="p-3.5 text-rose-400">0.4980</td>
+                                    <td class="p-3.5 font-bold text-emerald-400">0.3913</td>
+                                    <td class="p-3.5 text-right font-bold text-emerald-400">-21.43% (Tốt Hơn)</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3.5 font-bold text-white">F1-Score (Threshold = 0.50)</td>
-                                    <td class="p-3.5 text-slate-400">0.3100</td>
-                                    <td class="p-3.5 font-bold text-emerald-400">0.4950</td>
-                                    <td class="p-3.5 text-right font-bold text-emerald-400">+59.68%</td>
+                                    <td class="p-3.5 text-slate-400">0.6283</td>
+                                    <td class="p-3.5 font-bold text-emerald-400">0.6639</td>
+                                    <td class="p-3.5 text-right font-bold text-emerald-400">+5.67%</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2329,13 +2329,13 @@
                             </h4>
                             <ul class="space-y-3 text-[11px] leading-relaxed">
                                 <li class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 space-y-1">
-                                    <strong class="text-white font-mono block">1. Lượng Hóa Value-Add Vượt Trội (+68.65% PR-AUC)</strong>
-                                    <p class="text-slate-300"><strong>Giải thích:</strong> Baseline quy tắc trực giác ($\mathbb{I}(Z_{vol} > 1.5 \lor \sigma_P > Q_{80})$) chỉ đạt PR-AUC $0.3250$.</p>
-                                    <p class="text-amber-300"><strong>Ý nghĩa:</strong> GBDT vượt trội nhờ khả năng học các ranh giới phi tuyến phức tạp giữa vi mô sổ lệnh và gia tốc giá.</p>
+                                    <strong class="text-white font-mono block">1. Lượng Hóa Value-Add Vượt Trội (+24.71% PR-AUC)</strong>
+                                    <p class="text-slate-300"><strong>Giải thích:</strong> Baseline quy tắc trực giác ($\mathbb{I}(Z_{vol} > 1.5 \lor \sigma_P > Q_{80})$) chỉ đạt PR-AUC $0.6124$.</p>
+                                    <p class="text-amber-300"><strong>Ý nghĩa:</strong> GBDT vượt trội ($0.7637$) nhờ khả năng học các ranh giới phi tuyến phức tạp giữa vi mô sổ lệnh và gia tốc giá.</p>
                                 </li>
                                 <li class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 space-y-1">
-                                    <strong class="text-purple-300 font-mono block">2. Hiệu Chuẩn Isotonic Giảm -15.54% Sai Số Xác Suất</strong>
-                                    <p class="text-slate-300"><strong>Giải thích:</strong> Đường cong Calibration sau khi fit Isotonic bám sát đường chéo $45^\circ$ hoàn hảo, giảm Brier Score xuống $0.1250$.</p>
+                                    <strong class="text-purple-300 font-mono block">2. Hiệu Chuẩn Isotonic Giảm -28.62% Sai Số Xác Suất</strong>
+                                    <p class="text-slate-300"><strong>Giải thích:</strong> Đường cong Calibration sau khi fit Isotonic bám sát đường chéo $45^\circ$ hoàn hảo, giảm Brier Score xuống $0.0881$.</p>
                                     <p class="text-amber-300"><strong>Ý nghĩa:</strong> Đầu ra xác suất $\hat{p}_t$ hoàn toàn đáng tin cậy để làm trọng số phân bổ vốn (Kelly Criterion).</p>
                                 </li>
                             </ul>
@@ -2395,59 +2395,59 @@
                             <tbody class="divide-y divide-slate-800/80 bg-slate-950/60 font-mono text-[11px]">
                                 <tr class="hover:bg-slate-900/50 transition-all bg-amber-500/5">
                                     <td class="p-3 text-center font-bold text-amber-400">#1</td>
-                                    <td class="p-3 font-bold text-white">parkinson_vol_15m</td>
-                                    <td class="p-3 text-right font-bold text-amber-400">0.084500</td>
-                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.003200</td>
-                                    <td class="p-3 font-sans text-emerald-400 font-semibold">Tín hiệu cốt lõi (Extreme Variance)</td>
+                                    <td class="p-3 font-bold text-white">spread_ratio_15m</td>
+                                    <td class="p-3 text-right font-bold text-amber-400">0.041027</td>
+                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000323</td>
+                                    <td class="p-3 font-sans text-emerald-400 font-semibold">Tín hiệu cốt lõi (Độ giãn râu nến vi mô)</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 text-center font-bold text-amber-400">#2</td>
-                                    <td class="p-3 font-bold text-white">spread_ratio_15m</td>
-                                    <td class="p-3 text-right font-bold text-amber-400">0.051200</td>
-                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.002100</td>
-                                    <td class="p-3 font-sans text-emerald-400 font-semibold">Độ giãn biên độ giá vi mô</td>
+                                    <td class="p-3 font-bold text-white">rolling_vol_60m</td>
+                                    <td class="p-3 text-right font-bold text-amber-400">0.038690</td>
+                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000648</td>
+                                    <td class="p-3 font-sans text-emerald-400 font-semibold">Bối cảnh chế độ biến động 1h</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 text-center font-bold text-slate-400">#3</td>
-                                    <td class="p-3 font-bold text-white">volume_spike_z_60m</td>
-                                    <td class="p-3 text-right text-slate-200">0.038400</td>
-                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.001800</td>
-                                    <td class="p-3 font-sans text-cyan-400">Bùng nổ thanh khoản bất thường</td>
-                                </tr>
-                                <tr class="hover:bg-slate-900/50 transition-all">
-                                    <td class="p-3 text-center font-bold text-slate-400">#4</td>
                                     <td class="p-3 font-bold text-white">garman_klass_vol_15m</td>
-                                    <td class="p-3 text-right text-slate-200">0.024500</td>
-                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.001500</td>
+                                    <td class="p-3 text-right text-slate-200">0.018288</td>
+                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000529</td>
                                     <td class="p-3 font-sans text-cyan-400">Biến động bước nhảy Open/Close</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
+                                    <td class="p-3 text-center font-bold text-slate-400">#4</td>
+                                    <td class="p-3 font-bold text-white">volume_spike_z_60m</td>
+                                    <td class="p-3 text-right text-slate-200">0.006704</td>
+                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000393</td>
+                                    <td class="p-3 font-sans text-cyan-400">Bùng nổ thanh khoản bất thường</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 text-center font-bold text-slate-400">#5</td>
-                                    <td class="p-3 font-bold text-white">trade_density</td>
-                                    <td class="p-3 text-right text-slate-200">0.018200</td>
-                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.001100</td>
-                                    <td class="p-3 font-sans text-purple-400">Quy mô lệnh khớp cá voi (Block Size)</td>
+                                    <td class="p-3 font-bold text-white">return_momentum_15m</td>
+                                    <td class="p-3 text-right text-slate-200">0.004573</td>
+                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000181</td>
+                                    <td class="p-3 font-sans text-purple-400">Gia tốc động lượng giá ngắn hạn</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 text-center font-bold text-slate-400">#6</td>
-                                    <td class="p-3 font-bold text-white">ofi_ratio</td>
-                                    <td class="p-3 text-right text-slate-200">0.014500</td>
-                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000950</td>
-                                    <td class="p-3 font-sans text-purple-400">Mất cân bằng dòng lệnh mua chủ động</td>
+                                    <td class="p-3 font-bold text-white">parkinson_vol_15m</td>
+                                    <td class="p-3 text-right text-slate-200">0.001789</td>
+                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000310</td>
+                                    <td class="p-3 font-sans text-purple-400">Phương sai cực trị High/Low</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 text-center font-bold text-slate-400">#7</td>
-                                    <td class="p-3 font-bold text-white">rolling_vol_60m</td>
-                                    <td class="p-3 text-right text-slate-300">0.009500</td>
-                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000650</td>
-                                    <td class="p-3 font-sans text-slate-400">Bối cảnh chế độ biến động dài hạn</td>
+                                    <td class="p-3 font-bold text-white">ofi_ratio</td>
+                                    <td class="p-3 text-right text-slate-300">0.000554</td>
+                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000099</td>
+                                    <td class="p-3 font-sans text-slate-400">Mất cân bằng dòng lệnh mua chủ động</td>
                                 </tr>
                                 <tr class="hover:bg-slate-900/50 transition-all">
                                     <td class="p-3 text-center font-bold text-slate-400">#8</td>
-                                    <td class="p-3 font-bold text-white">return_momentum_15m</td>
-                                    <td class="p-3 text-right text-slate-300">0.004200</td>
-                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000410</td>
-                                    <td class="p-3 font-sans text-slate-400">Gia tốc trượt giá ngắn hạn</td>
+                                    <td class="p-3 font-bold text-white">trade_density</td>
+                                    <td class="p-3 text-right text-slate-300">0.000449</td>
+                                    <td class="p-3 text-right text-slate-400">&plusmn; 0.000083</td>
+                                    <td class="p-3 font-sans text-slate-400">Quy mô lệnh khớp cá voi (Block Size)</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2465,13 +2465,13 @@
                             </h4>
                             <ul class="space-y-3 text-[11px] leading-relaxed">
                                 <li class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 space-y-1">
-                                    <strong class="text-white font-mono block">1. Cấu Trúc Vi Mô Thống Trị ($\Delta \text{AUC} > 0.05$)</strong>
-                                    <p class="text-slate-300"><strong>Giải thích:</strong> Xáo trộn `parkinson_vol_15m` làm sụt giảm ngay lập tức $0.0845$ điểm ROC-AUC trên tập Test.</p>
+                                    <strong class="text-white font-mono block">1. Cấu Trúc Vi Mô Thống Trị ($\Delta \text{AUC} > 0.038$)</strong>
+                                    <p class="text-slate-300"><strong>Giải thích:</strong> Xáo trộn `spread_ratio_15m` và `rolling_vol_60m` làm sụt giảm xấp xỉ $\approx 0.040$ điểm ROC-AUC trên tập Test.</p>
                                     <p class="text-amber-300"><strong>Ý nghĩa:</strong> Khẳng định đây là tín hiệu vật lý thực chất phản ánh độ rung lắc của sổ lệnh chứ không phải tương quan giả tạo.</p>
                                 </li>
                                 <li class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80 space-y-1">
                                     <strong class="text-amber-400 font-mono block">2. Đóng Góp Đa Tầng Của Thanh Khoản &amp; Dòng Lệnh</strong>
-                                    <p class="text-slate-300"><strong>Giải thích:</strong> `volume_spike_z_60m`, `trade_density` và `ofi_ratio` đều có mức giảm có ý nghĩa thống kê ($\Delta \text{AUC} > 0.01$).</p>
+                                    <p class="text-slate-300"><strong>Giải thích:</strong> `volume_spike_z_60m`, `return_momentum_15m`, `trade_density` và `ofi_ratio` đều có mức giảm có ý nghĩa thống kê ($\text{Std} \ll \text{Mean}$).</p>
                                     <p class="text-amber-300"><strong>Ý nghĩa:</strong> Chứng minh mô hình học được mối quan hệ phối hợp giữa Khối lượng, Lệnh cá voi và Biến động giá.</p>
                                 </li>
                             </ul>

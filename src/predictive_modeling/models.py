@@ -47,7 +47,7 @@ def evaluate_predictions(
 
     # Brier Score & Log Loss
     brier = brier_score_loss(y_true, y_prob)
-    ll = log_loss(y_true, y_prob, eps=1e-15)
+    ll = log_loss(y_true, y_prob)
 
     # Binary metrics at threshold
     f1 = f1_score(y_true, y_pred, zero_division=0)

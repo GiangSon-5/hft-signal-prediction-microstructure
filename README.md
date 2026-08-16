@@ -13,7 +13,7 @@ Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Qu
 3. **Task 3 — Phân Tích Chuyên Sâu (Deep Dive):** Đề xuất giả thuyết định lượng về hiện tượng cấu trúc thị trường (Order Flow Toxicity & Tác động giá bất đối xứng Kyle's Lambda), thực hiện kiểm định thống kê kèm định lượng độ bất định (Uncertainty Quantification bằng 95% Confidence Interval từ Block Bootstrap), và nêu rõ hướng phát triển khi có dữ liệu tick/order book L2.
 
 ### Luồng Đầu Vào & Đầu Ra (Input / Output)
-- **Đầu vào (Input):** File `ds_assessment_data.csv` (~260,000 dòng x 9 cột: `timestamp` (UTC), `open`, `high`, `low`, `close`, `volume`, `quote_volume`, `trades`, `taker_buy_volume`).
+- **Đầu vào (Input):** File `data/raw/ds_assessment_data.csv` (~260,000 dòng x 9 cột: `timestamp` (UTC), `open`, `high`, `low`, `close`, `volume`, `quote_volume`, `trades`, `taker_buy_volume`).
 - **Đầu ra (Output):**
   1. Mô-đun mã nguồn Python chuẩn hóa (`src/`) & Các Notebook thực thi (`notebooks/`).
   2. Hệ thống biểu đồ trực quan hóa cao cấp (`reports/figures/`).
@@ -39,10 +39,11 @@ Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Qu
 ```
 ├── README.md                               # Tài liệu Kiến trúc Master (Tiếng Việt)
 ├── requirements.txt                        # Khai báo thư viện Python bắt buộc
-├── ds_assessment_data.csv                  # File dữ liệu thô H2 2024 (~260,000 dòng)
 ├── data/
-│   ├── raw/                                # Lưu trữ file thô ban đầu
-│   └── processed/                          # Lưu trữ dữ liệu sạch và tập feature dạng Parquet
+│   ├── raw/                                # Lưu trữ file thô ban đầu (data/raw/ds_assessment_data.csv)
+│   ├── bronze/                             # Lakehouse Bronze Parquet (raw.parquet)
+│   ├── silver/                             # Lakehouse Silver Parquet (cleaned.parquet)
+│   └── gold/                               # Lakehouse Gold Parquet (features.parquet)
 ├── notebooks/
 │   ├── 01_task1_signal_characterization.ipynb  # Notebook phân tích Task 1
 │   ├── 02_task2_predictive_modeling.ipynb       # Notebook mô hình hóa Task 2
@@ -89,14 +90,14 @@ Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Qu
 ## 4. Kiến Trúc Pipeline & Luồng Dữ Liệu (Data Flow)
 
 ```
-+--------------------------+
-|  ds_assessment_data.csv  | (Dữ liệu thô ~260,000 dòng nến 1 phút)
-+--------------------------+
++------------------------------------+
+|  data/raw/ds_assessment_data.csv   | (Dữ liệu thô ~260,000 dòng nến 1 phút)
++------------------------------------+
              |
              v
-+--------------------------+
-|    src.data_quality      | --> Lấp khoảng trống (gap), phát hiện bất thường, forward-fill giá
-+--------------------------+
++------------------------------------+
+|         src.data_quality           | --> Lấp khoảng trống (gap), phát hiện bất thường, forward-fill giá
++------------------------------------+
              |
              +---------------------------------------+
              |                                       |
@@ -133,7 +134,7 @@ Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Qu
 
 ## 5. Quy Chuẩn Dữ Liệu Toàn Cục (Global Data Contracts)
 
-### 5.1 Schema Dữ Liệu Thô (`ds_assessment_data.csv`)
+### 5.1 Schema Dữ Liệu Thô (`data/raw/ds_assessment_data.csv`)
 | Tên Cột | Kiểu Dữ Liệu | Ý Nghĩa / Mô Tả | Đơn Vị / Định Dạng |
 | :--- | :--- | :--- | :--- |
 | `timestamp` | Datetime (UTC) | Thời điểm mở nến 1 phút | `YYYY-MM-DD HH:MM:SS` |
@@ -237,7 +238,7 @@ Toàn bộ logic xử lý dữ liệu và thuật toán toán học của Task 1
 - *Cách dùng trong Task 2 & Task 3*:
   ```python
   from src.data_quality.cleaner import validate_and_clean_time_series
-  df_clean, audit = validate_and_clean_time_series(pd.read_csv('ds_assessment_data.csv'))
+  df_clean, audit = validate_and_clean_time_series(pd.read_csv('data/raw/ds_assessment_data.csv'))
   ```
 
 #### 2. Thư Viện Phân Tích Định Lượng ([`src/signal_characterization/analyzer.py`](file:///c:/Users/Admin/Desktop/Data%20Scientist/src/signal_characterization/analyzer.py)):
