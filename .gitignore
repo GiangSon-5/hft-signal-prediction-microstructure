@@ -1,12 +1,14 @@
-# Byte-compiled / optimized / DLL files
+# ==============================================================================
+# .gitignore - Quantitative Financial Engineering & MLOps Architecture
+# ==============================================================================
+
+# 1. Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
 
-# Distribution / packaging
+# 2. Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -25,20 +27,20 @@ share/python-wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
+# 3. Virtual environments
 .env
-.venv
+.venv/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
 
-# Jupyter Notebook
+# 4. Jupyter Notebook Checkpoints
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
-# pytest / coverage / linting
+# 5. Testing / Coverage / Linting
 .cache
 .pytest_cache/
 .coverage
@@ -47,7 +49,7 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 
-# IDEs & Editors
+# 6. IDEs, Editors & System Files
 .vscode/
 .idea/
 *.swp
@@ -55,8 +57,6 @@ htmlcov/
 *~
 .gemini/
 .agents/
-
-# Operating System files
 .DS_Store
 .DS_Store?
 ._*
@@ -66,36 +66,64 @@ ehthumbs.db
 Thumbs.db
 desktop.ini
 
-# Data Files & Artifacts (Ignore raw & processed data except .gitkeep)
+# 7. Data Lakehouse & Heavy Storage (Ignore raw, bronze, silver, gold data except .gitkeep)
 data/raw/*
 !data/raw/.gitkeep
+data/bronze/*
+!data/bronze/.gitkeep
+data/silver/*
+!data/silver/.gitkeep
+data/gold/*
+!data/gold/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
 *.parquet
 *.feather
 *.h5
 *.hd5
-
-# Large Dataset Files
 ds_assessment_data.csv
 
-# Saved Models & Heavy Binary Cache
+# 8. Databases, Feature Store Registry & Online Low-Latency Stores
+*.db
+*.sqlite
+*.sqlite3
+feature_store/data/
+data/registry.db
+data/online_store.db
+
+# 9. MLflow Tracking & Run Artifacts
+mlruns/
+mlartifacts/
+mlflow.db
+
+# 10. Saved Machine Learning Model Binaries (Heavy files)
 *.pkl
 *.joblib
 *.onnx
 *.bin
 *.model
+models/*.pkl
+!models/model_metadata.json
+!models/.gitkeep
 
-# Output Reports & Logs
+# 11. Generated Reports, Figures & Logs
 *.log
 reports/technical_report.html
 reports/technical_report.pdf
+reports/data_drift_report.html
+!reports/figures/
+!reports/figures/*.png
 !reports/figures/.gitkeep
 
-# Markdown & Document Files (Ignore all .md except README.md, ignore .docx)
+# 12. Markdown & Document Specifications Policy
 *.md
 **/*.md
 README_MASTER.md
 !README.md
+!src/**/README.md
+!src/**/*_SPEC.md
+!src/**/*_SRS.md
 *.docx
+
+# 13. Scratch Temporary Scripts & Output Dumps
 scratch/
