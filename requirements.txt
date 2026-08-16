@@ -4,11 +4,23 @@ numpy
 scipy
 statsmodels
 pyarrow
+duckdb
 
-# Machine Learning & Modeling
+# Machine Learning, Feature Store & MLOps
 scikit-learn
 xgboost
 lightgbm
+mlflow
+feast
+shap
+evidently
+
+# Production Serving & API
+fastapi
+uvicorn[standard]
+pydantic
+gradio
+prometheus-client
 
 # Visualization
 matplotlib
