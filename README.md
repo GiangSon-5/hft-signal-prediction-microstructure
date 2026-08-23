@@ -1,263 +1,165 @@
-# High-Frequency Market Data Architecture & Analytics
-## Phân Tích Dữ Liệu Thị Trường Tần Suất Cao & Mô Hình Dự Báo Biến Động (H2 2024)
+# High-Frequency Market Data Architecture & Quantitative Machine Learning
+## Phân Tích Dữ Liệu Thị Trường Tần Suất Cao & Kiến Trúc Dự Báo Biến Động Định Lượng (H2 2024)
 
 ---
 
-## 1. Tổng Quan Hệ Thống & Bối Cảnh Bài Toán
+## 1. Tổng Quan Hệ Thống & Bối Cảnh Nghiên Cứu
 
-Dự án này là một hệ thống Khoa học Dữ liệu Định lượng (Quantitative Data Science Architecture) hoàn chỉnh, có khả năng tái lập 100%, được thiết kế chuyên biệt để phân tích dữ liệu thị trường tần suất cao khung thời gian 1 phút trong nửa cuối năm 2024 (Tháng 7 – Tháng 12 năm 2024, bao gồm ~260,000 nến chuỗi thời gian liên tục).
+Hệ thống được thiết kế dưới dạng một **Kiến Trúc Kỹ Thuật Tài Chính Định Lượng Toàn Diện (Quantitative Financial Engineering Architecture)**, có khả năng tái lập thực nghiệm 100%, phục vụ nghiên cứu chuỗi thời gian thị trường tần suất cao (nến 1 phút) trong nửa cuối năm 2024 ($264,961$ mẫu quan sát chuỗi thời gian liên tục từ `01/07/2024` đến `31/12/2024`).
 
-### Các Mô-Đun Phân Tích Cốt Lõi
-1. **Task 1 — Đặc Trưng Hóa Tín Hiệu (Signal Characterization):** Phân tích thống kê chi tiết phân phối tỷ suất lợi nhuận 1 phút (close-to-close), đo lường độ nhọn (kurtosis) và đặc tính đuôi béo (fat-tailed), xác định 2 chế độ biến động (volatility regimes) trên cửa sổ trượt 60 phút, phân tích mối quan hệ giữa Khối lượng (`volume`), Số giao dịch (`trades`) và Biên độ giá, kiểm tra tự tương quan (autocorrelation) và đảm bảo chất lượng dữ liệu.
-2. **Task 2 — Mô Hình Dự Đoán (Predictive Modeling):** Định nghĩa mục tiêu nhị phân (Binary Target: Bùng nổ biến động 15 phút tới), tạo ít nhất 6 đặc trưng kỹ thuật domain-informed từ nến OHLCV, áp dụng chiến lược kiểm lỗi chéo theo thời gian **Time-Aware Cross-Validation (Purged & Embargoed CV — tuyệt đối không rò rỉ dữ liệu tương lai)**, huấn luyện mô hình XGBoost/LightGBM so sánh với Rule-based Baseline, và đánh giá hiệu chỉnh xác suất (Probability Calibration).
-3. **Task 3 — Phân Tích Chuyên Sâu (Deep Dive):** Đề xuất giả thuyết định lượng về hiện tượng cấu trúc thị trường (Order Flow Toxicity & Tác động giá bất đối xứng Kyle's Lambda), thực hiện kiểm định thống kê kèm định lượng độ bất định (Uncertainty Quantification bằng 95% Confidence Interval từ Block Bootstrap), và nêu rõ hướng phát triển khi có dữ liệu tick/order book L2.
-
-### Luồng Đầu Vào & Đầu Ra (Input / Output)
-- **Đầu vào (Input):** File `data/raw/ds_assessment_data.csv` (~260,000 dòng x 9 cột: `timestamp` (UTC), `open`, `high`, `low`, `close`, `volume`, `quote_volume`, `trades`, `taker_buy_volume`).
-- **Đầu ra (Output):**
-  1. Mô-đun mã nguồn Python chuẩn hóa (`src/`) & Các Notebook thực thi (`notebooks/`).
-  2. Hệ thống biểu đồ trực quan hóa cao cấp (`reports/figures/`).
-  3. Báo cáo Kỹ thuật cô đọng 3 trang A4 (`reports/technical_report.html` / PDF).
+### Các Thành Phần Kiến Trúc Cốt Lõi:
+1. **Medallion Data Lakehouse**: Chuyển đổi và chuẩn hóa dữ liệu qua 3 tầng lưu trữ Apache Parquet (Snappy compression):
+   - **Bronze Layer** (`data/bronze/raw.parquet`): Dữ liệu thô nguyên bản ($264,961$ dòng).
+   - **Silver Layer** (`data/silver/cleaned.parquet`): Dữ liệu làm sạch tái lập lưới 1m, forward-fill giá và zero-fill volume ($264,961$ dòng).
+   - **Gold Layer** (`data/gold/features.parquet` & `data/gold/extended_features.parquet`): Bảng rộng chứa 8 đến 16 đặc trưng cấu trúc vi mô và biến mục tiêu nhị phân 15m ($264,886$ dòng).
+2. **Kỹ Thuật Đặc Trưng Đa Quy Mô (Multi-Scale Feature Engineering)**: Khai thác 100% các cột dữ liệu thô (`quote_volume`, `trades`, `taker_buy_volume`), xây dựng 16 đặc trưng vi cấu trúc và thiết lập 4 kịch bản đối chuẩn ($8, 12, 16, 10$ features).
+3. **MLOps Ablation Study & Benchmarking**: Khảo sát toàn diện ma trận 16 cấu hình ($4\text{ Kịch bản} \times 4\text{ Mô hình}$) thông qua kỹ thuật **5-Fold Time-Aware Purged (15m) & Embargoed (30m) Cross-Validation** kết hợp **Isotonic Probability Calibration**.
+4. **Model Registry & Tracking**: Lưu trữ mô hình sản phẩm (`models/champion_model.pkl`), siêu dữ liệu (`models/model_metadata.json`) và ghi log toàn bộ vào MLflow Tracking Registry cục bộ (`mlflow/mlflow.db`).
 
 ---
 
-## 2. Lựa Chọn Công Nghệ & Lý Do Kiến Trúc (Tech Stack Decisions)
+## 2. Công Nghệ & Lý Do Kiến Trúc (Tech Stack)
 
-| Tầng Công Nghệ | Công Cụ / Thư Viện | Lý Do Lựa Chọn & Vai Trò |
+| Tầng Công Nghệ | Thư Viện / Công Cụ | Vai Trò & Lý Do Kiến Trúc |
 | :--- | :--- | :--- |
-| **Ngôn ngữ Lõi** | Python 3.11+ | Chuẩn mực ngành cho Quantitative Finance & Data Science. |
-| **Xử lý Dữ liệu** | `pandas`, `numpy` | Biến đổi chuỗi thời gian vectorized tốc độ cao, tính toán cửa sổ trượt (rolling window) tối ưu bộ nhớ. |
-| **Phân Tích Thống Kê** | `scipy.stats`, `statsmodels` | Kiểm định Jarque-Bera, khớp phân phối Student-t, tính toán hệ số tự tương quan ACF/PACF và kiểm định giả thuyết. |
-| **Mô Hình Học Máy** | `scikit-learn`, `xgboost`, `lightgbm` | Mô hình cây quyết định tăng cường gradient (GBDT) học quan hệ phi tuyến; kiểm lỗi Time-Series CV chống lookahead leakage. |
-| **Trực Quan Hóa** | `matplotlib`, `seaborn`, `plotly` | Tạo biểu đồ tĩnh chất lượng cao (High-DPI) và đồ thị tương tác phục vụ EDA. |
-| **Tạo Báo Cáo** | `jinja2`, HTML5 / CSS3 Paged Media | Tự động hóa việc đóng gói dữ liệu và biểu đồ thành Báo cáo Kỹ thuật 3 trang A4 hoàn chỉnh. |
+| **Ngôn Ngữ Lõi** | Python 3.11+ | Nền tảng chuẩn cho Data Science và Kỹ thuật Tài chính Định lượng. |
+| **Xử Lý Dữ Liệu & Lakehouse** | `pandas`, `pyarrow` | Biến đổi vector chuỗi thời gian tốc độ cao, định dạng lưu trữ cột nén Apache Parquet (Snappy). |
+| **Phân Tích Thống Kê** | `scipy.stats`, `statsmodels` | Kiểm định Jarque-Bera, khớp phân phối Student-t, phân tích tự tương quan ACF/PACF. |
+| **Mô Hình Học Máy** | `scikit-learn`, `lightgbm`, `xgboost` | Huấn luyện GBDT xử lý bất đối xứng lớp (80/20), kết hợp Stacking Ensemble. |
+| **Hiệu Chuẩn Xác Suất** | `CalibratedClassifierCV` (Isotonic) | Hiệu chuẩn xác suất dự báo, tối ưu sai số kỳ vọng tuyệt đối (ECE) và Brier Score. |
+| **MLOps & Quản Trị Thực Nghiệm** | `mlflow` | Tracking parameters, metrics từng fold, model lineage và lưu trữ artifact trong SQLite Database. |
+| **Trực Quan Hóa & Thanh Tiến Trình** | `matplotlib`, `seaborn`, `plotly`, `tqdm` | Xuất đồ thị phân tích chất lượng cao và thanh tiến trình thời gian thực. |
 
 ---
 
 ## 3. Cấu Trúc Thư Mục Dự Án (Project Tree)
 
 ```
-├── README.md                               # Tài liệu Kiến trúc Master (Tiếng Việt)
-├── requirements.txt                        # Khai báo thư viện Python bắt buộc
+├── README.md                               # Báo cáo Kiến trúc Tổng quan (Master Architecture Doc)
+├── requirements.txt                        # Khai báo các thư viện Python
 ├── data/
-│   ├── raw/                                # Lưu trữ file thô ban đầu (data/raw/ds_assessment_data.csv)
+│   ├── raw/                                # Dữ liệu thô gốc (data/raw/ds_assessment_data.csv)
 │   ├── bronze/                             # Lakehouse Bronze Parquet (raw.parquet)
 │   ├── silver/                             # Lakehouse Silver Parquet (cleaned.parquet)
-│   └── gold/                               # Lakehouse Gold Parquet (features.parquet)
+│   └── gold/                               # Lakehouse Gold Parquet (features.parquet, extended_features.parquet)
+├── mlflow/                                 # Kho lưu trữ MLflow SQLite Database (mlflow.db)
+├── models/
+│   ├── champion_model.pkl                  # Champion Model Artifact (GBDT + Isotonic Calibration)
+│   └── model_metadata.json                 # Thông số cấu hình, metrics OOF và siêu dữ liệu
 ├── notebooks/
-│   ├── 01_task1_signal_characterization.ipynb  # Notebook phân tích Task 1
-│   ├── 02_task2_predictive_modeling.ipynb       # Notebook mô hình hóa Task 2
-│   └── 03_task3_deep_dive.ipynb                # Notebook nghiên cứu sâu Task 3
-├── src/
-│   ├── data_quality/                       # Mô-đun Kiểm tra & Làm sạch Dữ liệu
-│   │   ├── __init__.py
-│   │   ├── data_quality_SPEC.md            # Đặc tả Kỹ thuật (Dev Spec)
-│   │   ├── data_quality_SRS.md             # Đặc tả Nghiệp vụ (Business SRS)
-│   │   └── cleaner.py                      # Code xử lý gap, outlier, forward fill
-│   ├── signal_characterization/           # Mô-đun Đặc trưng hóa Tín hiệu (Task 1)
-│   │   ├── __init__.py
-│   │   ├── signal_characterization_SPEC.md
-│   │   ├── signal_characterization_SRS.md
-│   │   └── analyzer.py                     # Code phân phối, regimes, ACF
-│   ├── feature_engineering/               # Mô-đun Tạo Đặc Trưng (Features)
-│   │   ├── __init__.py
-│   │   ├── feature_engineering_SPEC.md
-│   │   ├── feature_engineering_SRS.md
-│   │   └── generator.py                    # Code tính Parkinson vol, OFI, Trade density...
-│   ├── predictive_modeling/               # Mô-đun Mô Hình Dự Đoán (Task 2)
-│   │   ├── __init__.py
-│   │   ├── predictive_modeling_SPEC.md
-│   │   ├── predictive_modeling_SRS.md
-│   │   ├── validation.py                   # Time-Aware Purged/Embargoed CV
-│   │   └── models.py                       # Huấn luyện XGBoost, Baseline, Calibration
-│   ├── deep_dive/                         # Mô-đun Phân Tích Chuyên Sâu (Task 3)
-│   │   ├── __init__.py
-│   │   ├── deep_dive_SPEC.md
-│   │   ├── deep_dive_SRS.md
-│   │   └── microstructure.py               # Code hồi quy Kyle's Lambda & Bootstrap 95% CI
-│   └── reporting/                         # Mô-đun Sinh Báo Cáo Kỹ Thuật 3 Trang
-│       ├── __init__.py
-│       ├── reporting_SPEC.md
-│       ├── reporting_SRS.md
-│       └── generate_report.py              # Script biên dịch báo cáo HTML/PDF
-└── reports/
-    ├── figures/                            # Thư mục chứa biểu đồ đã xuất
-    └── technical_report.html               # Báo cáo Kỹ thuật 3 trang hoàn chỉnh
+│   ├── 01_task1_signal_characterization.ipynb  # Phân tích đặc trưng hóa tín hiệu & thống kê
+│   ├── 02_task2_predictive_modeling.ipynb       # Nghiên cứu mô hình hóa dự báo & SHAP
+│   └── 03_task3_deep_dive.ipynb                # Nghiên cứu sâu vi cấu trúc & Kyle's Lambda
+├── reports/
+│   ├── ablation_study_summary.md           # Bảng xếp hạng định lượng 16 cấu hình thực nghiệm
+│   ├── ablation_study_results.json         # Chi tiết kết quả từng fold và từng cấu hình
+│   └── figures/                            # Biểu đồ phân tích và SHAP Summary
+└── src/
+    ├── data_quality/                       # Làm sạch chuỗi thời gian 1m & kiểm định OHLC
+    │   ├── cleaner.py
+    │   ├── data_quality_SPEC.md
+    │   └── data_quality_SRS.md
+    ├── signal_characterization/            # Thống kê phân phối, regimes, ACF/PACF
+    │   ├── analyzer.py
+    │   ├── signal_characterization_SPEC.md
+    │   └── signal_characterization_SRS.md
+    ├── feature_engineering/                # Trích xuất 16 đặc trưng vi cấu trúc & 4 kịch bản
+    │   ├── generator.py
+    │   ├── feature_engineering_SPEC.md
+    │   └── feature_engineering_SRS.md
+    ├── lakehouse/                          # Pipeline Medallion 3 tầng (DuckDB/Pandas Parquet)
+    │   └── pipeline.py
+    ├── predictive_modeling/                # Thuật toán ML, Calibration & Time-Aware CV
+    │   ├── models.py
+    │   ├── validation.py
+    │   ├── predictive_modeling_SPEC.md
+    │   └── predictive_modeling_SRS.md
+    └── mlops/                              # Huấn luyện Champion Model & Ablation Study
+        ├── train_mlflow.py
+        └── ablation_study.py
 ```
 
 ---
 
-## 4. Kiến Trúc Pipeline & Luồng Dữ Liệu (Data Flow)
+## 4. Không Gian 16 Đặc Trưng Vi Cấu Trúc & 4 Kịch Bản Nghiên Cứu
 
-```
-+------------------------------------+
-|  data/raw/ds_assessment_data.csv   | (Dữ liệu thô ~260,000 dòng nến 1 phút)
-+------------------------------------+
-             |
-             v
-+------------------------------------+
-|         src.data_quality           | --> Lấp khoảng trống (gap), phát hiện bất thường, forward-fill giá
-+------------------------------------+
-             |
-             +---------------------------------------+
-             |                                       |
-             v                                       v
-+--------------------------+           +--------------------------+
-|src.signal_characterization|           | src.feature_engineering  |
-|  (Task 1: Phân phối,     |           | (Tính Parkinson Vol, OFI,|
-|   Vol Regimes, ACF)      |           |  Garman-Klass, Density)  |
-+--------------------------+           +--------------------------+
-             |                                       |
-             v                                       v
-+--------------------------+           +--------------------------+
-|      reports/figures     |           | src.predictive_modeling  |
-| (Biểu đồ xuất tự động)   |           | (Task 2: Time-Aware CV,  |
-+--------------------------+           |  XGBoost vs Baseline)    |
-             ^                         +--------------------------+
-             |                                       |
-             |                                       v
-             |                         +--------------------------+
-             |                         |      src.deep_dive       |
-             |                         |  (Task 3: Kyle's Lambda  |
-             |                         |   & Bootstrap 95% CI)    |
-             |                         +--------------------------+
-             |                                       |
-             +---------------------------------------+
-             |
-             v
-+--------------------------+
-|      src.reporting       | --> Sinh file reports/technical_report.html (Tối đa 3 trang A4)
-+--------------------------+
-```
+### 4.1 Bảng 16 Đặc Trưng Vi Cấu Trúc Thị Trường
 
----
-
-## 5. Quy Chuẩn Dữ Liệu Toàn Cục (Global Data Contracts)
-
-### 5.1 Schema Dữ Liệu Thô (`data/raw/ds_assessment_data.csv`)
-| Tên Cột | Kiểu Dữ Liệu | Ý Nghĩa / Mô Tả | Đơn Vị / Định Dạng |
+| Nhóm Đặc Trưng | Tên Biến | Công Thức Toán Học / Định Nghĩa Định Lượng | Ý Nghĩa Tài Chính Vi Cấu Trúc |
 | :--- | :--- | :--- | :--- |
-| `timestamp` | Datetime (UTC) | Thời điểm mở nến 1 phút | `YYYY-MM-DD HH:MM:SS` |
-| `open` | Float64 | Giá mở cửa trong phút | USD / Quote currency |
-| `high` | Float64 | Giá cao nhất trong phút | USD / Quote currency |
-| `low` | Float64 | Giá thấp nhất trong phút | USD / Quote currency |
-| `close` | Float64 | Giá đóng cửa trong phút | USD / Quote currency |
-| `volume` | Float64 | Tổng khối lượng giao dịch đồng cơ sở | BTC / Base asset |
-| `quote_volume` | Float64 | Tổng giá trị giao dịch đồng định giá | USDT / USD |
-| `trades` | Float64 | Số lượng khớp lệnh riêng lẻ | Số lượt (Count) |
-| `taker_buy_volume` | Float64 | Khối lượng khớp bởi lệnh mua chủ động | BTC / Base asset |
-
-### 5.2 Schema Ma Trận Đặc Trưng (`df_features`)
-| Tên Feature | Công Thức / Nguồn Tính | Ý Nghĩa Tài Chính & Kỳ Vọng Hữu Ích |
-| :--- | :--- | :--- |
-| `log_return` | $\ln(Close_t / Close_{t-1})$ | Tỷ suất lợi nhuận 1 phút close-to-close. |
-| `rolling_vol_60m` | $\sigma(r, N=60) \times \sqrt{525600}$ | Độ biến động trượt 60 phút quy năm. |
-| `parkinson_vol_15m` | $\sqrt{\frac{1}{4 \ln 2} \sum \ln(H/L)^2}$ | Ước lượng độ biến động qua khoảng High/Low 15 phút (hiệu quả hơn close-to-close). |
-| `garman_klass_vol` | $0.5 \ln(H/L)^2 - (2\ln 2-1)\ln(C/O)^2$ | Độ biến động bao gồm cả khoảng nhảy nến Open/Close. |
-| `ofi_ratio` | $\frac{taker\_buy\_volume}{volume + \epsilon}$ | Tỷ lệ mất cân bằng dòng lệnh (OFI: >0.5 lực mua áp đảo, <0.5 lực bán áp đảo). |
-| `trade_density` | $\frac{volume}{trades + \epsilon}$ | Khối lượng trung bình mỗi lệnh (phân biệt tổ chức vs nhỏ lẻ). |
-| `volume_spike_z` | $\frac{volume - \mu_{vol, 60m}}{\sigma_{vol, 60m}}$ | Z-score khối lượng nến hiện tại so với 60 phút trước (phát hiện dòng tiền bất thường). |
-| `target_vol_spike_15m` | $\mathbb{I}\left(vol_{t+15m} \ge Q_{0.80}\right)$ | Target nhị phân: Bùng nổ biến động giá trong 15 phút tới. |
+| **Biến động Extreme-Value** | `parkinson_vol_15m` | $\sqrt{\frac{1}{15 \cdot 4 \ln 2} \sum \ln(H/L)^2}$ | Đo lường độ biến động qua khoảng High/Low 15m (hiệu quả gấp 5 lần so với Close-to-Close). |
+| | `garman_klass_vol_15m` | $\sqrt{\frac{1}{15} \sum \left[ 0.5 \ln(H/L)^2 - (2\ln 2 - 1)\ln(C/O)^2 \right]}$ | Đo lường độ biến động kết hợp khoảng nhảy Open/Close và High/Low. |
+| **Dòng lệnh & Mật độ** | `ofi_ratio` | $\frac{\text{taker\_buy\_volume}}{\text{volume} + \epsilon}$ | Tỷ lệ mất cân bằng dòng lệnh mua/bán chủ động (Order Flow Imbalance). |
+| | `trade_density` | $\frac{\text{volume}}{\text{trades} + \epsilon}$ | Khối lượng trung bình mỗi lượt khớp lệnh (phân biệt tổ chức vs nhỏ lẻ). |
+| | `normalized_net_flow` | $\frac{2 \cdot \text{taker\_buy\_vol} - \text{vol}}{\text{vol} + \epsilon} \in [-1, 1]$ | Dòng tiền ròng chủ động chuẩn hóa trong đoạn $[-1, 1]$. |
+| **Bùng nổ Khối lượng & Lệnh** | `volume_spike_z_60m` | $\frac{\text{volume} - \mu_{60m}}{\sigma_{60m} + \epsilon}$ | Z-Score phát hiện các cú bùng nổ khối lượng đột biến so với nền 60 phút. |
+| | `trades_z_60m` | $\frac{\text{trades} - \mu_{60m}}{\sigma_{60m} + \epsilon}$ | Z-Score đo lường sự bùng nổ đột biến về tần suất giao dịch của thị trường. |
+| **Giá trị giao dịch & Lệch VWAP** | `vwap_dev_15m` | $\frac{P_t - \text{VWAP}_{15m}}{P_t}$ với $\text{VWAP} = \frac{\sum \text{quote\_volume}}{\sum \text{volume}}$ | Độ phân kỳ giữa giá hiện tại và giá bình quân gia quyền khối lượng. |
+| | `dollar_trade_size` | $\frac{\text{quote\_volume}}{\text{trades} + \epsilon}$ | Giá trị định danh USD trung bình mỗi lệnh (nhận diện dòng tiền tổ chức). |
+| **Cấu trúc kỳ hạn & Đa quy mô**| `vol_term_structure_15_60`| $\frac{\sigma_{\text{GK}, 15m}}{\sigma_{\text{GK}, 60m}}$ | Tỷ số giữa biến động ngắn hạn 15m và trung hạn 60m (phát hiện xung lực bùng nổ). |
+| | `parkinson_vol_5m` | $\sqrt{\frac{1}{5 \cdot 4 \ln 2} \sum \ln(H/L)^2}$ | Biến động Parkinson siêu ngắn hạn 5 phút. |
+| | `parkinson_vol_30m` | $\sqrt{\frac{1}{30 \cdot 4 \ln 2} \sum \ln(H/L)^2}$ | Biến động Parkinson trung hạn 30 phút. |
+| **Bước nhảy & Động lượng** | `jump_intensity_15m` | $\frac{\text{Parkinson Vol}_{15m}}{\text{Realized Vol}_{15m}}$ | Đo lường mức độ ảnh hưởng của bước nhảy giá so với biến động liên tục. |
+| | `return_momentum_15m` | $\ln(P_t / P_{t-15})$ | Động lượng log-return 15 phút. |
+| | `rolling_vol_60m` | $\sigma(\text{return}, 60m) \times \sqrt{525,600}$ | Độ biến động độ lệch chuẩn giá đóng cửa 60m quy năm. |
+| | `spread_ratio_15m` | $\text{mean}_{15m}\left(\frac{\text{High} - \text{Low}}{\text{Open}}\right)$ | Tỷ số biên độ nến trung bình trượt 15 phút. |
 
 ---
 
-## 6. Hướng Dẫn Cài Đặt & Thực Thi Hệ Thống (Installation & Quickstart Guide)
+### 4.2 Định Nghĩa 4 Kịch Bản Thực Nghiệm (Feature Scenarios)
 
-### 6.1 Cài Đặt Môi Trường Với `uv` (Khuyên Dùng - Siêu Tốc)
+1. **`scenario_a_baseline_8` (8 biến)**: 8 đặc trưng cấu trúc vi mô cơ sở.
+2. **`scenario_b_full_raw_12` (12 biến)**: Khai thác 100% cột dữ liệu thô (bổ sung `vwap_dev_15m`, `dollar_trade_size`, `normalized_net_flow`, `trades_z_60m`).
+3. **`scenario_c_multiscale_16` (16 biến)**: Toàn diện 16 đặc trưng kết hợp cấu trúc kỳ hạn đa khung thời gian và cường độ bước nhảy.
+4. **`scenario_d_optimal_10` (10 biến)**: Top 10 đặc trưng tinh gọn tối ưu được chọn lọc theo Permutation Importance.
 
-```bash
-# 1. Clone repository về máy local
-git clone https://github.com/GiangSon-5/hft-signal-prediction-microstructure.git
-cd hft-signal-prediction-microstructure
+---
 
-# 2. Tạo môi trường ảo .venv với Python 3.11 sử dụng uv
-uv venv .venv --python 3.11
+## 5. Kết Quả Thực Nghiệm Đối Chuẩn (Ablation Study Matrix)
 
-# 3. Kích hoạt môi trường (Windows PowerShell)
+Tất cả các cấu hình được đánh giá trên **5-Fold Time-Aware Purged (15m) & Embargoed (30m) Cross-Validation** kết hợp **Isotonic Probability Calibration**:
+
+| Xếp Hạng | Kịch Bản Đặc Trưng | Thuật Toán Mô Hình | Số Biến | PR-AUC (OOF) | ROC-AUC (OOF) | Brier Score | ECE | F1-Score | Thời Gian (s) |
+| :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 🥇 **Champion** | **`scenario_c_multiscale_16`** | **HistGBDT** | **16** | **0.7674** | **0.9091** | **0.0869** | **0.0183** | **0.6630** | 110.51 |
+| 🥈 **Top 2** | `scenario_c_multiscale_16` | LightGBM | 16 | **0.7670** | **0.9089** | **0.0869** | **0.0184** | **0.6636** | **12.71** |
+| 🥉 **Top 3** | `scenario_c_multiscale_16` | XGBoost | 16 | **0.7668** | **0.9089** | **0.0870** | **0.0188** | **0.6624** | 13.20 |
+| **4** | `scenario_b_full_raw_12` | HistGBDT | 12 | **0.7638** | **0.9080** | **0.0876** | **0.0184** | **0.6623** | 118.05 |
+| **5** | `scenario_b_full_raw_12` | LightGBM | 12 | **0.7634** | **0.9079** | **0.0877** | **0.0188** | **0.6605** | 12.65 |
+| **6** | `scenario_b_full_raw_12` | XGBoost | 12 | **0.7632** | **0.9079** | **0.0877** | **0.0191** | **0.6603** | 19.20 |
+| **7** | `scenario_a_baseline_8` | HistGBDT | 8 | **0.7611** | **0.9075** | **0.0881** | **0.0182** | **0.6594** | 86.43 |
+| **8** | `scenario_a_baseline_8` | LightGBM | 8 | **0.7610** | **0.9075** | **0.0881** | **0.0186** | **0.6592** | 10.26 |
+| **9** | `scenario_a_baseline_8` | XGBoost | 8 | **0.7610** | **0.9075** | **0.0881** | **0.0181** | **0.6577** | 10.13 |
+| **10** | `scenario_d_optimal_10` | XGBoost | 10 | **0.7599** | **0.9077** | **0.0881** | **0.0200** | **0.6613** | 10.82 |
+| **11** | `scenario_d_optimal_10` | LightGBM | 10 | **0.7595** | **0.9076** | **0.0882** | **0.0196** | **0.6604** | 11.31 |
+| **12** | `scenario_d_optimal_10` | HistGBDT | 10 | **0.7594** | **0.9075** | **0.0882** | **0.0198** | **0.6594** | 56.08 |
+| **Mốc Tham Chiếu**| `Baseline_Rule_Based` | Heuristic | 2 | **0.5894** | **0.8455** | **0.1718** | **0.2359** | **0.5904** | 0.50 |
+
+---
+
+## 6. Hướng Dẫn Thực Thi Hệ Thống (Execution Guide)
+
+### 6.1 Khởi Tạo Môi Trường
+```powershell
+# 1. Kích hoạt môi trường ảo
 .\.venv\Scripts\activate
 
-# 3b. Kích hoạt môi trường (Linux / macOS)
-source .venv/bin/activate
-
-# 4. Cài đặt toàn bộ thư viện từ requirements.txt qua uv pip
-uv pip install -r requirements.txt
-
-# 5. Đăng ký Kernel cho Jupyter Notebook
-python -m ipykernel install --user --name hft_ds_py311 --display-name "Python 3.11 (.venv)"
+# 2. Cài đặt các thư viện phụ thuộc
+pip install -r requirements.txt
 ```
 
----
+### 6.2 Thực Thi Tuần Tự Các Pipeline
+```powershell
+# Bước 1: Xây dựng Medallion Data Lakehouse (CSV -> Bronze -> Silver -> Gold)
+python -m src.lakehouse.pipeline
 
-### 6.2 Hướng Dẫn Thực Thi Pipeline & Jupyter Notebooks
+# Bước 2: Huấn luyện và đóng gói Champion Model vào Model Registry
+python -m src.mlops.train_mlflow
 
-1. **Thực thi phân tích Task 1 (Signal Characterization):**
-   Mở và chạy file [notebooks/01_task1_signal_characterization.ipynb](file:///c:/Users/Admin/Desktop/Data%20Scientist/notebooks/01_task1_signal_characterization.ipynb) để tính toán đặc trưng phân phối, volatility regimes và xuất biểu đồ vào `reports/figures/`.
+# Bước 3: Chạy chuỗi thực nghiệm đối chuẩn Ablation Study (16 cấu hình)
+python -m src.mlops.ablation_study
 
-2. **Thực thi phân tích Task 2 (Predictive Modeling):**
-   Mở và chạy file [notebooks/02_task2_predictive_modeling.ipynb](file:///c:/Users/Admin/Desktop/Data%20Scientist/notebooks/02_task2_predictive_modeling.ipynb) để trích xuất tập feature, thực hiện Time-Aware Purged/Embargoed CV và huấn luyện XGBoost/LightGBM.
-
-3. **Thực thi phân tích Task 3 (Deep Dive & Microstructure):**
-   Mở và chạy file [notebooks/03_task3_deep_dive.ipynb](file:///c:/Users/Admin/Desktop/Data%20Scientist/notebooks/03_task3_deep_dive.ipynb) để kiểm định hiện tượng Kyle's Lambda và chạy Block Bootstrap 95% Confidence Interval.
-
-4. **Tự động sinh Báo cáo Kỹ thuật (Technical Report 3 trang):**
-   ```bash
-   python -m src.reporting.generate_report
-   ```
-
----
-
-## 7. Bảng Tóm Tắt Kết Quả Thực Nghiệm Task 1 & Lộ Trình Chuyển Giao Task 2
-
-### 7.1 Kết Quả Thực Nghiệm Định Lượng Task 1 (Task 1 Empirical Results Summary)
-
-| Hạng Mục Kiểm Định | Thuật Toán & Phương Pháp | Kết Quả Định Lượng Thực Nghiệm | Kết Luận & Ý Nghĩa Quản Trị Rủi Ro |
-| :--- | :--- | :--- | :--- |
-| **Data Integrity Audit** | Grid 1m Audit & Forward-fill | **100% Sạch** ($N = 264,961$ nến, 0 Gap, 0 Lỗi OHLCV) | Dữ liệu đạt độ toàn vẹn tuyệt đối H2 2024, không cần tạo nến ảo. |
-| **Phân Phối Return 1m** | Jarque-Bera Test & Student-t | $JB = 47,347,809.45$ ($p = 0.0$), $df = 2.665 < 3.0$ | Bác bỏ phân phối chuẩn; 100% thuộc tính đuôi béo (Fat-tails). |
-| **Volatility Regimes** | Rolling Std 60m & Quantile $Q_{0.75}$ | Low Vol: 75% ($<55.61\%$), High Vol: 25% ($\ge 55.61\%$) | Xác nhận hiện tượng cụm biến động (Volatility Clustering). |
-| **Volume - Trades - Price** | Spearman Rank Correlation | $r_{\text{Volume}} = +0.7601$, $r_{\text{Trades}} = +0.7184$ | Biến động giá lớn bắt buộc đi kèm CẢ Volume lớn LẪN Trades dồn dập. |
-| **Regime Fat-Tails** | Sub-sample Student-t Fit | Low Vol $df = 3.90$ vs High Vol $df = 1.990 \le 2.0$ | High Vol Regime rơi vào ranh giới Phương sai vô hạn (Infinite Variance Hazard). |
-| **Autocorrelation (ACF)** | ACF/PACF Lags 1-30m (95% CI) | Lag 1m $r_1 = -0.0057 < -0.0038$ ($p < 0.05$) | Hiện tượng Đảo chiều vi mô (Bid-Ask Bounce) & Chu kỳ bot TWAP (7-13m, 30m). |
-
-### 7.2 Lộ Trình Chuyển Giao Sang Task 2 (Task 2 Readiness & Feature Pipeline)
-
-1. **Định nghĩa Binary Target ($Y_t$):** Bùng nổ biến động 15m tới $Y_t = \mathbb{I}\left(\sigma_{fwd, 15m} \ge Q_{0.80}\right)$.
-2. **Bộ Đặc Trưng Vi Mô ($8$ Features):** `parkinson_vol_15m`, `garman_klass_vol_15m`, `ofi_ratio`, `trade_density`, `volume_spike_z_60m`, `return_momentum_15m`, `rolling_vol_60m`, `spread_ratio_15m`.
-3. **Chiến Lược CV Chống Rò Rỉ:** Time-Aware Purged & Embargoed TimeSeries Split 5-Fold (Purge 15m, Embargo 30m).
-4. **Mô Hình & Hiệu Chỉnh:** Huấn luyện GBDT (HistGradientBoosting/XGBoost) vs Rule-based Baseline, đánh giá ROC-AUC, PR-AUC, F1-Score và Isotonic Probability Calibration (Brier Score).
-
----
-
-### 7.3 Hướng Dẫn Tái Sử Dụng Thư Viện Cốt Lõi (`cleaner.py` & `analyzer.py`) Cho Task 2 & Task 3
-
-Toàn bộ logic xử lý dữ liệu và thuật toán toán học của Task 1 đã được đóng gói thành các hàm chuẩn trong tầng `src/` để tái sử dụng xuyên suốt dự án:
-
-#### 1. Thư Viện Tiền Xử Lý Dữ Liệu ([`src/data_quality/cleaner.py`](file:///c:/Users/Admin/Desktop/Data%20Scientist/src/data_quality/cleaner.py)):
-- **`audit_data_quality(df: pd.DataFrame) -> dict`**: Kiểm định toàn diện số lượng NaN, phân tích gaps $\Delta t > 1\text{m}$, phát hiện vi phạm logic OHLCV.
-- **`validate_and_clean_time_series(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]`**: Chuẩn hóa `timestamp` sang `Datetime64[ns]`, tái lập 1-min grid, lấp nến có điều kiện (Forward-fill Close, Zero-fill Volume).
-- *Cách dùng trong Task 2 & Task 3*:
-  ```python
-  from src.data_quality.cleaner import validate_and_clean_time_series
-  df_clean, audit = validate_and_clean_time_series(pd.read_csv('data/raw/ds_assessment_data.csv'))
-  ```
-
-#### 2. Thư Viện Phân Tích Định Lượng ([`src/signal_characterization/analyzer.py`](file:///c:/Users/Admin/Desktop/Data%20Scientist/src/signal_characterization/analyzer.py)):
-- **`calculate_log_returns(df, col='close')`**: Tính tỷ suất lợi nhuận Log 1m: $r_t = \ln(P_t / P_{t-1})$.
-- **`analyze_returns_distribution(returns)`**: Tính Mean, Std, Skewness, Kurtosis, kiểm định Jarque-Bera và khớp Student-t $df$.
-- **`compute_rolling_volatility(returns, window=60)`**: Tính độ biến động trượt 60m quy năm ($\times \sqrt{525,600}$).
-- **`detect_volatility_regimes(rolling_vol, threshold_quantile=0.75)`**: Phân tách 2 Chế độ biến động Low Vol vs High Vol tại ngưỡng $Q_{0.75}$.
-- **`compare_volatility_regimes(returns, regimes)`**: So sánh Kurtosis và bậc tự do Student-t giữa các chế độ biến động.
-- **`analyze_volume_trades_range(df)`**: Tính ma trận tương quan Spearman giữa Volume, Trades và Price Range.
-- **`analyze_autocorrelation(returns, nlags=30)`**: Tính ACF/PACF 30 lags và dải tin cậy 95%.
-- *Cách dùng trong Task 2 & Task 3*:
-  ```python
-  from src.signal_characterization.analyzer import (
-      calculate_log_returns,
-      compute_rolling_volatility,
-      detect_volatility_regimes
-  )
-  df_clean['log_return'] = calculate_log_returns(df_clean)
-  df_clean['rolling_vol_60m'] = compute_rolling_volatility(df_clean['log_return'], window=60)
-  df_clean['regime'], cutoff = detect_volatility_regimes(df_clean['rolling_vol_60m'], threshold_quantile=0.75)
-  ```
-
+# Bước 4: Khởi động giao diện trực quan hóa MLflow Dashboard
+python -m mlflow ui --backend-store-uri sqlite:///mlflow/mlflow.db --port 5000
+```
+Sau đó truy cập trình duyệt tại địa chỉ: `http://127.0.0.1:5000`.
