@@ -1,11 +1,17 @@
 """Module huấn luyện mô hình dự báo biến động và hiệu chỉnh xác suất (Predictive Modeling).
 
-Cung cấp các hàm huấn luyện Rule-based Baseline, GBDT (HistGradientBoosting/XGBoost),
-đánh giá hiệu năng đa chiều (ROC-AUC, PR-AUC, Brier Score), hiệu chỉnh xác suất (Probability Calibration)
-và phân tích độ quan trọng đặc trưng (Permutation Feature Importance).
+Cung cấp các hàm huấn luyện:
+- Rule-based Baseline
+- HistGradientBoostingClassifier (Isotonic Calibrated)
+- LightGBM Classifier
+- XGBoost Classifier
+- Stacking Ensemble Classifier
+
+Đánh giá hiệu năng đa chiều (ROC-AUC, PR-AUC, Brier Score, ECE, Log Loss, F1),
+hiệu chỉnh xác suất (Probability Calibration) và phân tích độ quan trọng đặc trưng.
 """
 
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 import numpy as np
 import pandas as pd
 from sklearn.metrics import (
@@ -19,8 +25,60 @@ from sklearn.metrics import (
     recall_score,
 )
 from sklearn.calibration import CalibratedClassifierCV, calibration_curve
-from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.ensemble import HistGradientBoostingClassifier, StackingClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.inspection import permutation_importance
+
+try:
+    import lightgbm as lgb
+    HAS_LIGHTGBM = True
+except ImportError:
+    HAS_LIGHTGBM = False
+
+try:
+    import xgboost as xgb
+    HAS_XGBOOST = True
+except ImportError:
+    HAS_XGBOOST = False
+
+
+def calculate_expected_calibration_error(
+    y_true: np.ndarray, y_prob: np.ndarray, n_bins: int = 10
+) -> float:
+    r"""Tính toán chỉ số Expected Calibration Error (ECE).
+
+    Đo lường sai số kỳ vọng tuyệt đối giữa xác suất dự đoán và tần suất thực nghiệm.
+
+    Công thức:
+        $$\text{ECE} = \sum_{m=1}^M \frac{|B_m|}{N} |\text{acc}(B_m) - \text{conf}(B_m)|$$
+
+    Args:
+        y_true: Mảng nhãn thực tế nhị phân.
+        y_prob: Mảng xác suất dự đoán trong [0, 1].
+        n_bins: Số lượng thùng phân vị xác suất (mặc định 10).
+
+    Returns:
+        float: Giá trị ECE trong khoảng [0, 1].
+    """
+    bin_boundaries = np.linspace(0, 1, n_bins + 1)
+    ece = 0.0
+    n = len(y_true)
+
+    for i in range(n_bins):
+        bin_lower = bin_boundaries[i]
+        bin_upper = bin_boundaries[i + 1]
+        if i == n_bins - 1:
+            in_bin = (y_prob >= bin_lower) & (y_prob <= bin_upper)
+        else:
+            in_bin = (y_prob >= bin_lower) & (y_prob < bin_upper)
+
+        bin_size = np.sum(in_bin)
+        if bin_size > 0:
+            bin_acc = np.mean(y_true[in_bin])
+            bin_conf = np.mean(y_prob[in_bin])
+            ece += (bin_size / n) * np.abs(bin_acc - bin_conf)
+
+    return float(ece)
 
 
 def evaluate_predictions(
@@ -34,7 +92,7 @@ def evaluate_predictions(
         threshold: Ngưỡng phân loại nhị phân để tính F1, Precision, Recall.
 
     Returns:
-        Dict[str, float]: Từ điển chứa các chỉ số ROC-AUC, PR-AUC, Brier Score, Log Loss, F1, Precision, Recall.
+        Dict[str, float]: Từ điển chứa các chỉ số ROC-AUC, PR-AUC, Brier Score, ECE, Log Loss, F1, Precision, Recall.
     """
     y_pred = (y_prob >= threshold).astype(int)
 
@@ -45,8 +103,9 @@ def evaluate_predictions(
     precision_arr, recall_arr, _ = precision_recall_curve(y_true, y_prob)
     pr_auc = auc(recall_arr, precision_arr)
 
-    # Brier Score & Log Loss
+    # Brier Score & ECE & Log Loss
     brier = brier_score_loss(y_true, y_prob)
+    ece = calculate_expected_calibration_error(y_true, y_prob, n_bins=10)
     ll = log_loss(y_true, y_prob)
 
     # Binary metrics at threshold
@@ -58,6 +117,7 @@ def evaluate_predictions(
         "roc_auc": float(roc_auc),
         "pr_auc": float(pr_auc),
         "brier_score": float(brier),
+        "ece": float(ece),
         "log_loss": float(ll),
         "f1_score": float(f1),
         "precision": float(prec),
@@ -108,7 +168,7 @@ def train_gbdt_model(
     max_depth: int = 5,
     min_samples_leaf: int = 50,
 ) -> HistGradientBoostingClassifier:
-    """Huấn luyện mô hình GBDT xử lý mất cân bằng lớp (80/20).
+    """Huấn luyện mô hình HistGradientBoostingClassifier xử lý mất cân bằng lớp (80/20).
 
     Args:
         X_train: Ma trận đặc trưng tập huấn luyện.
@@ -132,6 +192,144 @@ def train_gbdt_model(
     )
     model.fit(X_train, y_train)
     return model
+
+
+def train_lightgbm_model(
+    X_train: np.ndarray,
+    y_train: np.ndarray,
+    random_state: int = 42,
+    n_estimators: int = 150,
+    learning_rate: float = 0.05,
+    max_depth: int = 5,
+    num_leaves: int = 31,
+) -> Any:
+    """Huấn luyện mô hình LightGBM Classifier xử lý mất cân bằng lớp.
+
+    Args:
+        X_train: Ma trận đặc trưng tập huấn luyện.
+        y_train: Mảng nhãn tập huấn luyện.
+        random_state: Seed ngẫu nhiên.
+        n_estimators: Số lượng cây.
+        learning_rate: Tốc độ học.
+        max_depth: Độ sâu tối đa.
+        num_leaves: Số lượng lá tối đa.
+
+    Returns:
+        LGBMClassifier: Mô hình LightGBM đã huấn luyện.
+    """
+    if not HAS_LIGHTGBM:
+        raise ImportError("LightGBM chưa được cài đặt trong môi trường.")
+
+    model = lgb.LGBMClassifier(
+        n_estimators=n_estimators,
+        learning_rate=learning_rate,
+        max_depth=max_depth,
+        num_leaves=num_leaves,
+        class_weight="balanced",
+        random_state=random_state,
+        n_jobs=-1,
+        verbose=-1,
+    )
+    model.fit(X_train, y_train)
+    return model
+
+
+def train_xgboost_model(
+    X_train: np.ndarray,
+    y_train: np.ndarray,
+    random_state: int = 42,
+    n_estimators: int = 150,
+    learning_rate: float = 0.05,
+    max_depth: int = 5,
+) -> Any:
+    """Huấn luyện mô hình XGBoost Classifier với trọng số cân bằng lớp scale_pos_weight.
+
+    Args:
+        X_train: Ma trận đặc trưng tập huấn luyện.
+        y_train: Mảng nhãn tập huấn luyện.
+        random_state: Seed ngẫu nhiên.
+        n_estimators: Số lượng cây.
+        learning_rate: Tốc độ học.
+        max_depth: Độ sâu tối đa.
+
+    Returns:
+        XGBClassifier: Mô hình XGBoost đã huấn luyện.
+    """
+    if not HAS_XGBOOST:
+        raise ImportError("XGBoost chưa được cài đặt trong môi trường.")
+
+    neg_count = np.sum(y_train == 0)
+    pos_count = max(np.sum(y_train == 1), 1)
+    scale_pos = neg_count / pos_count
+
+    model = xgb.XGBClassifier(
+        n_estimators=n_estimators,
+        learning_rate=learning_rate,
+        max_depth=max_depth,
+        scale_pos_weight=scale_pos,
+        random_state=random_state,
+        n_jobs=-1,
+        eval_metric="logloss",
+    )
+    model.fit(X_train, y_train)
+    return model
+
+
+def train_stacking_ensemble(
+    X_train: np.ndarray,
+    y_train: np.ndarray,
+    random_state: int = 42,
+) -> StackingClassifier:
+    """Huấn luyện Stacking Ensemble kết hợp HistGradientBoosting, LightGBM và LogisticRegression Meta-Learner.
+
+    Args:
+        X_train: Ma trận đặc trưng tập huấn luyện.
+        y_train: Mảng nhãn tập huấn luyện.
+        random_state: Seed ngẫu nhiên.
+
+    Returns:
+        StackingClassifier: Mô hình Stacking Ensemble đã huấn luyện.
+    """
+    estimators = [
+        (
+            "hist_gbdt",
+            HistGradientBoostingClassifier(
+                max_iter=100, learning_rate=0.05, max_depth=5, class_weight="balanced", random_state=random_state
+            ),
+        )
+    ]
+
+    if HAS_LIGHTGBM:
+        estimators.append(
+            (
+                "lightgbm",
+                lgb.LGBMClassifier(
+                    n_estimators=100, learning_rate=0.05, max_depth=5, class_weight="balanced", random_state=random_state, n_jobs=-1, verbose=-1
+                ),
+            )
+        )
+
+    if HAS_XGBOOST:
+        neg_count = np.sum(y_train == 0)
+        pos_count = max(np.sum(y_train == 1), 1)
+        estimators.append(
+            (
+                "xgboost",
+                xgb.XGBClassifier(
+                    n_estimators=100, learning_rate=0.05, max_depth=5, scale_pos_weight=neg_count / pos_count, random_state=random_state, n_jobs=-1, eval_metric="logloss"
+                ),
+            )
+        )
+
+    meta_learner = LogisticRegression(class_weight="balanced", max_iter=500, random_state=random_state)
+    stacking = StackingClassifier(
+        estimators=estimators,
+        final_estimator=meta_learner,
+        cv=3,
+        n_jobs=-1,
+    )
+    stacking.fit(X_train, y_train)
+    return stacking
 
 
 def calibrate_probability_predictions(

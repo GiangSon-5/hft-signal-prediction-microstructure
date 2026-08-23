@@ -4,35 +4,26 @@ numpy
 scipy
 statsmodels
 pyarrow
-duckdb
 
-# Machine Learning, Feature Store & MLOps
+# Machine Learning & AI Diagnostics
 scikit-learn
 xgboost
 lightgbm
 mlflow
-feast
 shap
 evidently
 
-# Production Serving & API
-fastapi
-uvicorn[standard]
-pydantic
-gradio
-prometheus-client
-
-# Visualization
+# Visualization & Reporting
 matplotlib
 seaborn
 plotly
+jinja2
 
 # Jupyter Notebook & Environment
 jupyter
 notebook
 ipykernel
 
-# PDF / HTML Report Generation & Utilities
-jinja2
+# Utilities
 tqdm
 joblib

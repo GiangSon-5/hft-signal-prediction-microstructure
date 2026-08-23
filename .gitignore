@@ -83,17 +83,15 @@ data/processed/*
 *.hd5
 ds_assessment_data.csv
 
-# 8. Databases, Feature Store Registry & Online Low-Latency Stores
+# 8. Local Databases & SQLite Stores
 *.db
 *.sqlite
 *.sqlite3
-feature_store/data/
-data/registry.db
-data/online_store.db
 
 # 9. MLflow Tracking & Run Artifacts
 mlruns/
 mlartifacts/
+mlflow/
 mlflow.db
 
 # 10. Saved Machine Learning Model Binaries (Heavy files)
@@ -115,14 +113,10 @@ reports/data_drift_report.html
 !reports/figures/*.png
 !reports/figures/.gitkeep
 
-# 12. Markdown & Document Specifications Policy
+# 12. Markdown & Document Specifications Policy (Bỏ qua toàn bộ .md trừ README.md)
 *.md
 **/*.md
-README_MASTER.md
 !README.md
-!src/**/README.md
-!src/**/*_SPEC.md
-!src/**/*_SRS.md
 *.docx
 
 # 13. Scratch Temporary Scripts & Output Dumps

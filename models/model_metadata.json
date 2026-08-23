@@ -1,0 +1,54 @@
+{
+  "model_name": "Champion_HistGBDT_Calibrated",
+  "model_type": "CalibratedClassifierCV(HistGradientBoostingClassifier)",
+  "version": "1.0.0",
+  "created_at": "2026-08-23 14:01:22Z",
+  "features": [
+    "parkinson_vol_15m",
+    "garman_klass_vol_15m",
+    "ofi_ratio",
+    "trade_density",
+    "volume_spike_z_60m",
+    "return_momentum_15m",
+    "rolling_vol_60m",
+    "spread_ratio_15m"
+  ],
+  "feature_count": 8,
+  "target": "target_vol_spike_15m",
+  "target_definition": "I(Forward_15m_Std >= Quantile_0.80)",
+  "sample_size": 264886,
+  "cross_validation": {
+    "strategy": "PurgedTimeSeriesSplit",
+    "n_splits": 5,
+    "purge_window_bars": 15,
+    "embargo_window_bars": 30
+  },
+  "metrics_out_of_fold": {
+    "roc_auc": 0.9081,
+    "pr_auc": 0.7637,
+    "brier_score": 0.1235,
+    "ece": 0.1598,
+    "log_loss": 0.3924,
+    "f1_score": 0.6639,
+    "precision": 0.5547,
+    "recall": 0.8266
+  },
+  "baseline_comparison": {
+    "baseline_type": "Rule_Based_Heuristic",
+    "roc_auc": 0.8316,
+    "pr_auc": 0.5626,
+    "brier_score": 0.1769,
+    "f1_score": 0.5681,
+    "roc_auc_lift_pct": 9.19,
+    "pr_auc_lift_pct": 35.75
+  },
+  "hyperparameters": {
+    "max_iter": 150,
+    "learning_rate": 0.05,
+    "max_depth": 5,
+    "min_samples_leaf": 50,
+    "class_weight": "balanced",
+    "calibration_method": "isotonic",
+    "calibration_cv": 3
+  }
+}
