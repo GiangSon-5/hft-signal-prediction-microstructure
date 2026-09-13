@@ -9,7 +9,37 @@ from typing import Any, Dict, Tuple
 import numpy as np
 import pandas as pd
 from scipy import stats
-from statsmodels.tsa.stattools import acf, pacf
+
+try:
+    from statsmodels.tsa.stattools import acf, pacf
+except (ImportError, Exception):
+    def acf(x: np.ndarray, nlags: int = 30, fft: bool = True) -> np.ndarray:
+        """Hàm dự phòng tính hàm tự tương quan ACF bằng NumPy thuần."""
+        x_c = np.asarray(x, dtype=np.float64) - np.mean(x)
+        var = np.dot(x_c, x_c)
+        if var == 0:
+            return np.zeros(nlags + 1)
+        r = np.correlate(x_c, x_c, mode="full")
+        idx = len(x_c) - 1
+        return r[idx : idx + nlags + 1] / var
+
+    def pacf(x: np.ndarray, nlags: int = 30, method: str = "ywm") -> np.ndarray:
+        """Hàm dự phòng tính tự tương quan riêng phần PACF qua đệ quy Durbin-Levinson."""
+        r = acf(x, nlags=nlags)
+        phi = np.zeros((nlags + 1, nlags + 1), dtype=np.float64)
+        pacf_vals = np.zeros(nlags + 1, dtype=np.float64)
+        pacf_vals[0] = 1.0
+        if nlags >= 1:
+            phi[1, 1] = r[1]
+            pacf_vals[1] = r[1]
+        for k in range(2, nlags + 1):
+            num = r[k] - np.dot(phi[k - 1, 1:k], r[1:k][::-1])
+            den = 1.0 - np.dot(phi[k - 1, 1:k], r[1:k])
+            phi[k, k] = num / den if abs(den) > 1e-12 else 0.0
+            for j in range(1, k):
+                phi[k, j] = phi[k - 1, j] - phi[k, k] * phi[k - 1, k - j]
+            pacf_vals[k] = phi[k, k]
+        return pacf_vals
 
 
 def calculate_log_returns(df: pd.DataFrame, col: str = "close") -> pd.Series:

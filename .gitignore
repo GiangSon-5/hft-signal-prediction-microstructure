@@ -106,17 +106,20 @@ models/*.pkl
 
 # 11. Generated Reports, Figures & Logs
 *.log
-reports/technical_report.html
+!reports/technical_report.html
 reports/technical_report.pdf
 reports/data_drift_report.html
 !reports/figures/
 !reports/figures/*.png
 !reports/figures/.gitkeep
 
-# 12. Markdown & Document Specifications Policy (Bỏ qua toàn bộ .md trừ README.md)
+# 12. Markdown & Document Specifications Policy (Theo dõi README và module specs)
 *.md
 **/*.md
 !README.md
+!README_MASTER.md
+!src/**/*.md
+!reports/*.md
 *.docx
 
 # 13. Scratch Temporary Scripts & Output Dumps

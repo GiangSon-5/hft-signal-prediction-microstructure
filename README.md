@@ -51,6 +51,7 @@ Hệ thống được thiết kế dưới dạng một **Kiến Trúc Kỹ Thu�
 │   ├── 02_task2_predictive_modeling.ipynb       # Nghiên cứu mô hình hóa dự báo & SHAP
 │   └── 03_task3_deep_dive.ipynb                # Nghiên cứu sâu vi cấu trúc & Kyle's Lambda
 ├── reports/
+│   ├── technical_report.html               # Báo cáo Kỹ thuật 3 trang A4 độc lập (Base64 images)
 │   ├── ablation_study_summary.md           # Bảng xếp hạng định lượng 16 cấu hình thực nghiệm
 │   ├── ablation_study_results.json         # Chi tiết kết quả từng fold và từng cấu hình
 │   └── figures/                            # Biểu đồ phân tích và SHAP Summary
