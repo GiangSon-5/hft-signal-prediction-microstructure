@@ -187,7 +187,7 @@ def calculate_vwap_deviation(
     Khai thác cột `quote_volume` kết hợp `volume` để đo lường độ phân kỳ giá vi mô.
 
     Công thức:
-        $$\text{VWAP}_{W, t} = \frac{\sum_{k=0}^{W-1} \text{quote\_volume}_{t-k}}{\sum_{k=0}^{W-1} \text{volume}_{t-k} + \epsilon}$$
+        $$\text{VWAP}_{W, t} = \frac{\sum_{k=0}^{W-1} \text{Quote Volume}_{t-k}}{\sum_{k=0}^{W-1} \text{volume}_{t-k} + \epsilon}$$
         $$\text{dev}_{VWAP} = \frac{\text{Close}_t - \text{VWAP}_{W, t}}{\text{Close}_t}$$
 
     Args:
@@ -212,7 +212,7 @@ def calculate_dollar_trade_size(
     Phản ánh hành vi dòng tiền tổ chức (Block Trades) so với lệnh nhỏ lẻ.
 
     Công thức:
-        $$\text{Dollar Trade Size} = \frac{\text{quote\_volume}}{\text{trades} + \epsilon}$$
+        $$\text{Dollar Trade Size} = \frac{\text{Quote Volume}}{\text{Trades} + \epsilon}$$
 
     Args:
         df: DataFrame chứa cột 'quote_volume' và 'trades'.
@@ -249,7 +249,7 @@ def calculate_trades_zscore(
     r"""Tính Z-Score chuẩn hóa mức độ đột biến số lượng giao dịch trong 60 phút.
 
     Công thức:
-        $$Z_{trades} = \frac{\text{trades} - \mu_{trades, 60m}}{\sigma_{trades, 60m} + \epsilon}$$
+        $$Z_{trades} = \frac{\text{Trades} - \mu_{trades, 60m}}{\sigma_{trades, 60m} + \epsilon}$$
 
     Args:
         df: DataFrame chứa cột 'trades'.

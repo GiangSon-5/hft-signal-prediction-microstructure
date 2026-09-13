@@ -20,7 +20,7 @@ Mô-đun `feature_engineering` trích xuất 16 đặc trưng cấu trúc vi mô
 | `rolling_vol_60m` | `float64` | Độ lệch chuẩn tỷ suất sinh lời 60 phút quy năm. Đo lường mức biến động nền tảng trung hạn. |
 | `spread_ratio_15m` | `float64` | Tỷ số biên độ nến trung bình trượt 15 phút $\frac{\text{High} - \text{Low}}{\text{Open}}$. Phản ánh mức độ mở rộng của dải giá. |
 | `vwap_dev_15m` | `float64` | Độ lệch giữa giá hiện tại và VWAP 15m $\frac{P_t - \text{VWAP}_{15m}}{P_t}$. Đo lường áp lực mua/bán tích cực đẩy giá rời xa mức cân bằng khối lượng. |
-| `dollar_trade_size` | `float64` | Quy mô USD bình quân mỗi lệnh $\frac{\text{quote\_volume}}{\text{trades}}$. Phát hiện sự xuất hiện của dòng tiền lớn (Whale orders). |
+| `dollar_trade_size` | `float64` | Quy mô USD bình quân mỗi lệnh $\frac{\text{Quote Volume}}{\text{Trades}}$. Phát hiện sự xuất hiện của dòng tiền lớn (Whale orders). |
 | `normalized_net_flow`| `float64` | Dòng tiền ròng chủ động chuẩn hóa trong đoạn $[-1, 1]$ $\frac{2 \cdot \text{TakerBuy} - \text{Vol}}{\text{Vol} + \epsilon}$. |
 | `trades_z_60m` | `float64` | Z-Score bùng nổ số lượng giao dịch so với lịch sử 60 phút. |
 | `vol_term_structure_15_60`| `float64`| Tỷ số cấu trúc kỳ hạn biến động $\frac{\sigma_{\text{GK}, 15m}}{\sigma_{\text{GK}, 60m}}$. Phát hiện sự bùng nổ biến động ngắn hạn so với nền trung hạn. |

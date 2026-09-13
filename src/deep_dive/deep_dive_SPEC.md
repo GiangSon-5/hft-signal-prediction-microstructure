@@ -40,7 +40,7 @@ Mô-đun `deep_dive` thực thi Task 3 (Phân tích mở rộng). Mô-đun tiế
 ### 3.1 Mô Hình Tác Động Giá Kyle's Lambda Theo Regime
 Đo lường tác động giá thực nghiệm của dòng lệnh:
 $$\Delta p_{t+1} = \alpha + \lambda \cdot (OFI_t - 0.5) + \epsilon_t$$
-với $\Delta p_{t+1} = \frac{Close_{t+1} - Close_t}{Close_t}$ và $OFI_t = \frac{taker\_buy\_volume_t}{volume_t}$.
+với $\Delta p_{t+1} = \frac{Close_{t+1} - Close_t}{Close_t}$ và $OFI_t = \frac{\text{Taker Buy Volume}_t}{\text{Volume}_t}$.
 
 Hồi quy riêng biệt theo 2 regimes:
 1. **Regime Biến động thấp ($S_t = 0$):** $\Delta p_{t+1} = \alpha_{low} + \lambda_{low} (OFI_t - 0.5) + \epsilon_{low}$

@@ -90,13 +90,13 @@ Hệ thống được thiết kế dưới dạng một **Kiến Trúc Kỹ Thu�
 | :--- | :--- | :--- | :--- |
 | **Biến động Extreme-Value** | `parkinson_vol_15m` | $\sqrt{\frac{1}{15 \cdot 4 \ln 2} \sum \ln(H/L)^2}$ | Đo lường độ biến động qua khoảng High/Low 15m (hiệu quả gấp 5 lần so với Close-to-Close). |
 | | `garman_klass_vol_15m` | $\sqrt{\frac{1}{15} \sum \left[ 0.5 \ln(H/L)^2 - (2\ln 2 - 1)\ln(C/O)^2 \right]}$ | Đo lường độ biến động kết hợp khoảng nhảy Open/Close và High/Low. |
-| **Dòng lệnh & Mật độ** | `ofi_ratio` | $\frac{\text{taker\_buy\_volume}}{\text{volume} + \epsilon}$ | Tỷ lệ mất cân bằng dòng lệnh mua/bán chủ động (Order Flow Imbalance). |
-| | `trade_density` | $\frac{\text{volume}}{\text{trades} + \epsilon}$ | Khối lượng trung bình mỗi lượt khớp lệnh (phân biệt tổ chức vs nhỏ lẻ). |
-| | `normalized_net_flow` | $\frac{2 \cdot \text{taker\_buy\_vol} - \text{vol}}{\text{vol} + \epsilon} \in [-1, 1]$ | Dòng tiền ròng chủ động chuẩn hóa trong đoạn $[-1, 1]$. |
-| **Bùng nổ Khối lượng & Lệnh** | `volume_spike_z_60m` | $\frac{\text{volume} - \mu_{60m}}{\sigma_{60m} + \epsilon}$ | Z-Score phát hiện các cú bùng nổ khối lượng đột biến so với nền 60 phút. |
-| | `trades_z_60m` | $\frac{\text{trades} - \mu_{60m}}{\sigma_{60m} + \epsilon}$ | Z-Score đo lường sự bùng nổ đột biến về tần suất giao dịch của thị trường. |
-| **Giá trị giao dịch & Lệch VWAP** | `vwap_dev_15m` | $\frac{P_t - \text{VWAP}_{15m}}{P_t}$ với $\text{VWAP} = \frac{\sum \text{quote\_volume}}{\sum \text{volume}}$ | Độ phân kỳ giữa giá hiện tại và giá bình quân gia quyền khối lượng. |
-| | `dollar_trade_size` | $\frac{\text{quote\_volume}}{\text{trades} + \epsilon}$ | Giá trị định danh USD trung bình mỗi lệnh (nhận diện dòng tiền tổ chức). |
+| **Dòng lệnh & Mật độ** | `ofi_ratio` | $\frac{\text{Taker Buy Volume}}{\text{Volume} + \epsilon}$ | Tỷ lệ mất cân bằng dòng lệnh mua/bán chủ động (Order Flow Imbalance). |
+| | `trade_density` | $\frac{\text{Volume}}{\text{Trades} + \epsilon}$ | Khối lượng trung bình mỗi lượt khớp lệnh (phân biệt tổ chức vs nhỏ lẻ). |
+| | `normalized_net_flow` | $\frac{2 \cdot \text{Taker Buy Vol} - \text{Vol}}{\text{Vol} + \epsilon} \in [-1, 1]$ | Dòng tiền ròng chủ động chuẩn hóa trong đoạn $[-1, 1]$. |
+| **Bùng nổ Khối lượng & Lệnh** | `volume_spike_z_60m` | $\frac{\text{Volume} - \mu_{60m}}{\sigma_{60m} + \epsilon}$ | Z-Score phát hiện các cú bùng nổ khối lượng đột biến so với nền 60 phút. |
+| | `trades_z_60m` | $\frac{\text{Trades} - \mu_{60m}}{\sigma_{60m} + \epsilon}$ | Z-Score đo lường sự bùng nổ đột biến về tần suất giao dịch của thị trường. |
+| **Giá trị giao dịch & Lệch VWAP** | `vwap_dev_15m` | $\frac{P_t - \text{VWAP}_{15m}}{P_t}$ với $\text{VWAP} = \frac{\sum \text{Quote Volume}}{\sum \text{Volume}}$ | Độ phân kỳ giữa giá hiện tại và giá bình quân gia quyền khối lượng. |
+| | `dollar_trade_size` | $\frac{\text{Quote Volume}}{\text{Trades} + \epsilon}$ | Giá trị định danh USD trung bình mỗi lệnh (nhận diện dòng tiền tổ chức). |
 | **Cấu trúc kỳ hạn & Đa quy mô**| `vol_term_structure_15_60`| $\frac{\sigma_{\text{GK}, 15m}}{\sigma_{\text{GK}, 60m}}$ | Tỷ số giữa biến động ngắn hạn 15m và trung hạn 60m (phát hiện xung lực bùng nổ). |
 | | `parkinson_vol_5m` | $\sqrt{\frac{1}{5 \cdot 4 \ln 2} \sum \ln(H/L)^2}$ | Biến động Parkinson siêu ngắn hạn 5 phút. |
 | | `parkinson_vol_30m` | $\sqrt{\frac{1}{30 \cdot 4 \ln 2} \sum \ln(H/L)^2}$ | Biến động Parkinson trung hạn 30 phút. |

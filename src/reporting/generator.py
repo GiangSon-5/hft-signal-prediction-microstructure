@@ -542,7 +542,7 @@ class TechnicalReportGenerator:
     <p>
         Áp dụng phương pháp <strong>Block Bootstrap Resampling</strong> với 1,000 lượt lặp và kích thước khối $B = 60$ nến liên tục (bảo toàn cấu trúc tự tương quan chuỗi thời gian). Kết quả định lượng:
         Khoảng tin cậy 95% CI của $\lambda_{low}$ là $[0.00039, 0.00045]$; trong khi $\lambda_{high}$ là $[0.00168, 0.00204]$.
-        Khoảng chênh lệch $\Delta \lambda$ đạt $[0.00124, 0.00163]$ với <strong>empirical p-value < 0.0001</strong>. Kết quả chứng minh với độ tin cậy $99.99\%$ rằng tác động giá trong thời kỳ biến động cao tăng gấp <strong>4.4 lần</strong>, xác nhận giả thuyết $H_1$.
+        Khoảng chênh lệch $\Delta \lambda$ đạt $[0.00124, 0.00163]$ với <strong>empirical p-value < 0.0001</strong>. Kết quả chứng minh với độ tin cậy 99.99% rằng tác động giá trong thời kỳ biến động cao tăng gấp <strong>4.4 lần</strong>, xác nhận giả thuyết $H_1$.
     </p>
 
     <div class="section-title">10. Hạn Chế Của Phân Tích & Lộ Trình Phát Triển Chiến Lược (Strategic Roadmap)</div>
