@@ -3,12 +3,14 @@
 **Mô tả chức năng tổng quan**
 Module `predictive_modeling` huấn luyện và đánh giá mô hình Machine Learning dự đoán hiện tượng bùng nổ biến động giá (Volatility Spike Target 15m). Module bắt buộc áp dụng chiến lược **Time-Aware Purged Cross-Validation** để chống rò rỉ dữ liệu tương lai (lookahead leakage), so sánh mô hình ML với Rule-Based Baseline, và thực hiện hiệu chỉnh xác suất (Probability Calibration).
 
-| Primary Actor: | Lead Machine Learning Engineer | Secondary Actor: | Quantitative Trading Strategy |
-|---|---|---|---|
-| **Description:** | Dự đoán xác suất xảy ra biến động lớn trong 15 phút tới dựa trên dữ liệu đặc trưng 1 phút không rò rỉ. |
-| **Trigger:** | Yêu cầu huấn luyện mô hình cho Task 2 từ Notebook hoặc Script tự động. |
-| **Preconditions:** | PRE1: Ma trận đặc trưng `df_features` đã sẵn sàng và được kiểm tra không chứa NaNs. |
-| **Post-conditions:** | POST1: Mô hình XGBoost đã huấn luyện, báo cáo Cross-Validation, biểu đồ ROC/PR curve, và Reliability Diagram được lưu. |
+| Thuộc Tính | Chi Tiết |
+| :--- | :--- |
+| **Primary Actor** | Lead Machine Learning Engineer |
+| **Secondary Actor** | Quantitative Trading Strategy |
+| **Description** | Dự đoán xác suất xảy ra biến động lớn trong 15 phút tới dựa trên dữ liệu đặc trưng 1 phút không rò rỉ. |
+| **Trigger** | Yêu cầu huấn luyện mô hình cho Task 2 từ Notebook hoặc Script tự động. |
+| **Preconditions** | PRE1: Ma trận đặc trưng `df_features` đã sẵn sàng và được kiểm tra không chứa NaNs. |
+| **Post-conditions** | POST1: Mô hình XGBoost đã huấn luyện, báo cáo Cross-Validation, biểu đồ ROC/PR curve, và Reliability Diagram được lưu. |
 
 **Business Scenario Walkthrough:**
 - **Khách hàng đưa vào:** Feature matrix `df_features` (6 đặc trưng) kèm nhãn `target_vol_spike_15m`.

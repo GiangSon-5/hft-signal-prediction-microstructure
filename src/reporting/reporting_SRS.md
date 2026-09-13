@@ -3,12 +3,14 @@
 **Mô tả chức năng tổng quan**
 Module `reporting` tự động tổng hợp toàn bộ kết quả phân tích thống kê, đồ thị trực quan, chỉ số mô hình ML, và kết quả kiểm định chuyên sâu thành một **Báo cáo Kỹ thuật (Technical Report)** chuẩn mực dài tối đa 3 trang định dạng HTML/PDF.
 
-| Primary Actor: | Quantitative Researcher / Lead Data Scientist | Secondary Actor: | Hiring Manager / Executive Stakeholder |
-|---|---|---|---|
-| **Description:** | Đóng gói toàn bộ kết quả phân tích Task 1, Task 2, Task 3 thành báo cáo kỹ thuật 3 trang cô đọng, đẹp mắt, và tự giải thích. |
-| **Trigger:** | Yêu cầu tạo báo cáo cuối cùng từ Notebook hoặc Script `generate_report.py`. |
-| **Preconditions:** | PRE1: Tất cả các figures (.png) đã được xuất ra thư mục `reports/figures/`. |
-| **Post-conditions:** | POST1: Báo cáo `reports/technical_report.html` được sinh ra hoàn chỉnh và sẵn sàng để in PDF. |
+| Thuộc Tính | Chi Tiết |
+| :--- | :--- |
+| **Primary Actor** | Quantitative Researcher / Lead Data Scientist |
+| **Secondary Actor** | Hiring Manager / Executive Stakeholder |
+| **Description** | Đóng gói toàn bộ kết quả phân tích Task 1, Task 2, Task 3 thành báo cáo kỹ thuật 3 trang cô đọng, đẹp mắt, và tự giải thích. |
+| **Trigger** | Yêu cầu tạo báo cáo cuối cùng từ Notebook hoặc Script `generate_report.py`. |
+| **Preconditions** | PRE1: Tất cả các figures (.png) đã được xuất ra thư mục `reports/figures/`. |
+| **Post-conditions** | POST1: Báo cáo `reports/technical_report.html` được sinh ra hoàn chỉnh và sẵn sàng để in PDF. |
 
 **Business Scenario Walkthrough:**
 - **Khách hàng đưa vào:** Dictionary các metrics thống kê và danh sách file hình ảnh trực quan.

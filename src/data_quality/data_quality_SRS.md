@@ -3,12 +3,14 @@
 **Mô tả chức năng tổng quan**
 Module `data_quality` tiếp nhận dữ liệu OHLCV 1 phút thô từ file CSV, kiểm tra tính toàn vẹn về thời gian và giá trị, xử lý missing data/gap, loại bỏ các bất thường (anomalies/outliers), và cung cấp tập dữ liệu chuẩn hóa cho các pipeline EDA và Machine Learning.
 
-| Primary Actor: | Quantitative Data Engineer | Secondary Actor: | Automated Data Pipeline / Storage |
-|---|---|---|---|
-| **Description:** | Chuẩn hóa chuỗi thời gian 1 phút H2 2024, làm sạch dữ liệu nhiễu và lấp khoảng trống timestamp. |
-| **Trigger:** | Khởi chạy notebook EDA hoặc script pipeline xử lý dữ liệu. |
-| **Preconditions:** | PRE1: File `ds_assessment_data.csv` tồn tại và đúng định dạng CSV. |
-| **Post-conditions:** | POST1: Tập dữ liệu sạch được lưu tại `data/processed/clean_ohlcv.parquet` kèm log báo cáo chất lượng. |
+| Thuộc Tính | Chi Tiết |
+| :--- | :--- |
+| **Primary Actor** | Quantitative Data Engineer |
+| **Secondary Actor** | Automated Data Pipeline / Storage |
+| **Description** | Chuẩn hóa chuỗi thời gian 1 phút H2 2024, làm sạch dữ liệu nhiễu và lấp khoảng trống timestamp. |
+| **Trigger** | Khởi chạy notebook EDA hoặc script pipeline xử lý dữ liệu. |
+| **Preconditions** | PRE1: File `ds_assessment_data.csv` tồn tại và đúng định dạng CSV. |
+| **Post-conditions** | POST1: Tập dữ liệu sạch được lưu tại `data/processed/clean_ohlcv.parquet` kèm log báo cáo chất lượng. |
 
 **Business Scenario Walkthrough:**
 - **Khách hàng đưa vào:** File `ds_assessment_data.csv` chứa 264,963 dòng dữ liệu 1 phút thô.

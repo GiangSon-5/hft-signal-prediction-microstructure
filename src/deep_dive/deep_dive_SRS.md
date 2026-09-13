@@ -3,12 +3,14 @@
 **Mô tả chức năng tổng quan**
 Module `deep_dive` thực hiện phân tích nghiên cứu chuyên sâu về một hiện tượng cấu trúc thị trường tần suất cao (Order Flow Toxicity & Asymmetric Price Impact). Module thiết lập kiểm định giả thuyết định lượng ($H_0$ vs $H_1$), sử dụng kỹ thuật Block Bootstrap resampling để ước lượng khoảng tin cậy 95% (Uncertainty Quantification), và đề xuất định hướng phát triển khi mở rộng dữ liệu.
 
-| Primary Actor: | Quantitative Researcher / Microstructure Lead | Secondary Actor: | Strategic Decision Maker |
-|---|---|---|---|
-| **Description:** | Đánh giá tác động độc hại của dòng lệnh chủ động (OFI) lên biến động giá theo từng regime biến động. |
-| **Trigger:** | Yêu cầu phân tích chuyên sâu cho Task 3 từ Notebook hoặc Script tự động. |
-| **Preconditions:** | PRE1: Dữ liệu đặc trưng `df_features` và nhãn `vol_regime` đã được tính toán đầy đủ. |
-| **Post-conditions:** | POST1: Kết quả kiểm định thống kê, khoảng tin cậy Bootstrap, và biểu đồ Kyle's Lambda được ghi nhận. |
+| Thuộc Tính | Chi Tiết |
+| :--- | :--- |
+| **Primary Actor** | Quantitative Researcher / Microstructure Lead |
+| **Secondary Actor** | Strategic Decision Maker |
+| **Description** | Đánh giá tác động độc hại của dòng lệnh chủ động (OFI) lên biến động giá theo từng regime biến động. |
+| **Trigger** | Yêu cầu phân tích chuyên sâu cho Task 3 từ Notebook hoặc Script tự động. |
+| **Preconditions** | PRE1: Dữ liệu đặc trưng `df_features` và nhãn `vol_regime` đã được tính toán đầy đủ. |
+| **Post-conditions** | POST1: Kết quả kiểm định thống kê, khoảng tin cậy Bootstrap, và biểu đồ Kyle's Lambda được ghi nhận. |
 
 **Business Scenario Walkthrough:**
 - **Khách hàng đưa vào:** Tập dữ liệu 1 phút chứa thông tin nến, volume, taker buy volume và nhãn regime biến động.

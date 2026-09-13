@@ -184,7 +184,7 @@ Chu kỳ tự tương quan vi mô           Lag 15, 30, 60           Ảnh hư�
 Toàn bộ 16 cấu hình thực nghiệm được đánh giá độc lập thông qua **5-Fold Time-Aware Purged (15m) & Embargoed (30m) Cross-Validation** kết hợp **Isotonic Probability Calibration**:
 
 | Xếp Hạng | Kịch Bản Đặc Trưng | Thuật Toán Mô Hình | Số Biến | PR-AUC (OOF) | ROC-AUC (OOF) | Brier Score | ECE | F1-Score | Thời Gian (s) |
-| :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | 🥇 **Champion** | **`scenario_c_multiscale_16`** | **HistGBDT** | **16** | **0.7674** | **0.9091** | **0.0869** | **0.0183** | **0.6630** | 110.51 |
 | 🥈 **Top 2** | `scenario_c_multiscale_16` | LightGBM | 16 | **0.7670** | **0.9089** | **0.0869** | **0.0184** | **0.6636** | **12.71** |
 | 🥉 **Top 3** | `scenario_c_multiscale_16` | XGBoost | 16 | **0.7668** | **0.9089** | **0.0870** | **0.0188** | **0.6624** | 13.20 |

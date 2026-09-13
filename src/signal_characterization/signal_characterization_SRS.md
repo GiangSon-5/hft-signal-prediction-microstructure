@@ -3,12 +3,14 @@
 **Mô tả chức năng tổng quan**
 Module `signal_characterization` thực hiện phân tích thống kê chuyên sâu trên chuỗi thời gian tỷ suất lợi nhuận 1 phút. Chức năng bao gồm đánh giá tính chuẩn của phân phối, tính toán độ biến động trượt 60 phút, phân cụm chế độ biến động (volatility regimes), phân tích quan hệ giữa khối lượng/số lượng giao dịch với biên độ giá, và kiểm định tự tương quan (autocorrelation).
 
-| Primary Actor: | Quantitative Researcher | Secondary Actor: | Reporting & Dashboard Module |
-|---|---|---|---|
-| **Description:** | Trích xuất các thuộc tính thống kê cốt lõi của thị trường 1 phút H2 2024 để làm cơ sở cho chiến lược giao dịch và quản trị rủi ro. |
-| **Trigger:** | Yêu cầu thực thi Task 1 từ Notebook hoặc Script tự động. |
-| **Preconditions:** | PRE1: Tập dữ liệu sạch `clean_ohlcv.parquet` đã được tạo từ module `data_quality`. |
-| **Post-conditions:** | POST1: Các chỉ số thống kê, biểu đồ phân phối, biểu đồ 2 regime biến động và ma trận tương quan được xuất ra thư mục `reports/figures/`. |
+| Thuộc Tính | Chi Tiết |
+| :--- | :--- |
+| **Primary Actor** | Quantitative Researcher |
+| **Secondary Actor** | Reporting & Dashboard Module |
+| **Description** | Trích xuất các thuộc tính thống kê cốt lõi của thị trường 1 phút H2 2024 để làm cơ sở cho chiến lược giao dịch và quản trị rủi ro. |
+| **Trigger** | Yêu cầu thực thi Task 1 từ Notebook hoặc Script tự động. |
+| **Preconditions** | PRE1: Tập dữ liệu sạch `clean_ohlcv.parquet` đã được tạo từ module `data_quality`. |
+| **Post-conditions** | POST1: Các chỉ số thống kê, biểu đồ phân phối, biểu đồ 2 regime biến động và ma trận tương quan được xuất ra thư mục `reports/figures/`. |
 
 **Business Scenario Walkthrough:**
 - **Khách hàng đưa vào:** Dữ liệu nến 1 phút đã làm sạch (~260,000 nến).

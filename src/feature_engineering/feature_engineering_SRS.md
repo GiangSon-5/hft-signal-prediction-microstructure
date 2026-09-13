@@ -3,12 +3,14 @@
 **Mô tả chức năng tổng quan**
 Module `feature_engineering` trích xuất và biến đổi các thuộc tính nến OHLCV thô thành ma trận đặc trưng (feature matrix) sẵn sàng cho mô hình Machine Learning. Module tính toán các chỉ số độ biến động nâng cao (Parkinson, Garman-Klass), chỉ số dòng lệnh chủ động (Order Flow Imbalance), mật độ giao dịch, z-score khối lượng bùng nổ, và động lượng tỷ suất lợi nhuận.
 
-| Primary Actor: | Quantitative Developer | Secondary Actor: | Predictive Modeling Module |
-|---|---|---|---|
-| **Description:** | Tạo ra ít nhất 6 đặc trưng domain-informed từ nến 1 phút mà không bị rò rỉ dữ liệu tương lai. |
-| **Trigger:** | Yêu cầu trích xuất đặc trưng cho Task 2 từ Notebook hoặc Script tự động. |
-| **Preconditions:** | PRE1: Dữ liệu nến 1 phút sạch `clean_ohlcv.parquet` đã sẵn sàng. |
-| **Post-conditions:** | POST1: Ma trận đặc trưng `df_features` được khởi tạo và kiểm tra tính dừng (stationarity). |
+| Thuộc Tính | Chi Tiết |
+| :--- | :--- |
+| **Primary Actor** | Quantitative Developer |
+| **Secondary Actor** | Predictive Modeling Module |
+| **Description** | Tạo ra ít nhất 6 đặc trưng domain-informed từ nến 1 phút mà không bị rò rỉ dữ liệu tương lai. |
+| **Trigger** | Yêu cầu trích xuất đặc trưng cho Task 2 từ Notebook hoặc Script tự động. |
+| **Preconditions** | PRE1: Dữ liệu nến 1 phút sạch `clean_ohlcv.parquet` đã sẵn sàng. |
+| **Post-conditions** | POST1: Ma trận đặc trưng `df_features` được khởi tạo và kiểm tra tính dừng (stationarity). |
 
 **Business Scenario Walkthrough:**
 - **Khách hàng đưa vào:** DataFrame nến 1 phút liên tục.
